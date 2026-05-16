@@ -1,0 +1,17 @@
+[
+  {
+    "id": "DEC-001",
+    "question": "Should this change run a full V-process or a bounded delta V-process?",
+    "selected_option": "bounded_delta_v_process",
+    "rationale": "The change affects existing behavior but does not introduce a new subsystem. Impact analysis and regression selection are mandatory.",
+    "status": "draft"
+  },
+  {
+    "id": "DEC-002",
+    "question": "Should trace links be exported to the formal ALM immediately?",
+    "selected_option": "export_after_review",
+    "rationale": "Trace links are candidates until the engineering review confirms affected requirements and test coverage.",
+    "status": "draft"
+  }
+]
+

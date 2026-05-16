@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {"id": "ACT-IMPACT", "node_type": "Activity", "title": "Change impact analysis"},
+    {"id": "ACT-TRACE", "node_type": "Activity", "title": "Trace candidate review"},
+    {"id": "ACT-REGRESSION", "node_type": "Activity", "title": "Regression test selection"},
+    {"id": "OI-001", "node_type": "OpenIssue", "title": "Timeout configuration authority is not defined"}
+  ],
+  "edges": [
+    {
+      "source_id": "CR-001",
+      "target_id": "ACT-IMPACT",
+      "edge_type": "requires_activity",
+      "rationale": "The change modifies runtime behavior."
+    },
+    {
+      "source_id": "REQ-001",
+      "target_id": "STD-SW-TRACE-01",
+      "edge_type": "references_standard",
+      "rationale": "The requirement is safety-relevant and requires verification trace."
+    },
+    {
+      "source_id": "CR-001",
+      "target_id": "OI-001",
+      "edge_type": "blocked_by",
+      "rationale": "The owner of product-profile timeout values must be decided before formal approval."
+    }
+  ]
+}
+

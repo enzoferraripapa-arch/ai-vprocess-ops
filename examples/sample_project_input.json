@@ -1,0 +1,51 @@
+{
+  "project_profile": {
+    "id": "PROJECT-DEMO-001",
+    "title": "Fictional motor controller firmware update",
+    "domain": "regulated embedded software",
+    "risk_level": "high",
+    "reuse_level": "partial",
+    "change_type": "behavior-changing software update",
+    "formal_alm": "external"
+  },
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "title": "Control loop shall enter a safe state on sensor timeout",
+      "body": "If the primary speed sensor has no valid sample for the configured timeout, the controller shall command a safe state.",
+      "status": "candidate"
+    },
+    {
+      "id": "REQ-002",
+      "title": "Diagnostic event shall be recorded for timeout transition",
+      "body": "A diagnostic event shall be recorded when the safe-state transition is triggered by sensor timeout.",
+      "status": "candidate"
+    }
+  ],
+  "change_request": {
+    "id": "CR-001",
+    "title": "Change timeout handling from fixed threshold to configurable threshold",
+    "body": "The sensor timeout threshold becomes configurable per product profile.",
+    "status": "candidate"
+  },
+  "standards": [
+    {
+      "id": "STD-SW-TRACE-01",
+      "title": "Fictional standard clause: bidirectional traceability",
+      "summary": "Safety-relevant software requirements should be traceable to design and verification evidence."
+    },
+    {
+      "id": "STD-SW-IMPACT-01",
+      "title": "Fictional standard clause: change impact analysis",
+      "summary": "A behavior-changing software modification should identify affected requirements, tests, and risk controls."
+    }
+  ],
+  "sops": [
+    {
+      "id": "SOP-DEMO-IMPACT-01",
+      "title": "Fictional SOP: software change impact review",
+      "summary": "Review affected requirements, design elements, verification cases, and unresolved assumptions before implementation."
+    }
+  ]
+}
+
