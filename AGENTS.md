@@ -33,6 +33,11 @@ Before changing or extending the project, read these files in order:
 Use `docs/08_related_work_and_positioning.md` when explaining how this differs
 from agent-memory, requirements-as-code, code-context graph, or GraphRAG tools.
 
+Use `docs/09_reverse_engineering_workflow.md` for authorized legacy-system
+recovery tasks where existing code, tests, logs, configuration, or partial
+documentation are converted into observed behavior, requirement candidates,
+trace candidates, open issues, and V-process activity recommendations.
+
 ## Intended Work
 
 When asked to use or extend this repository, preserve this operating model:
@@ -43,6 +48,8 @@ When asked to use or extend this repository, preserve this operating model:
 - Connect each recommendation to the requirement, change, issue, SOP, standard
   reference, or policy that triggered it.
 - Treat trace links as candidates until reviewed.
+- Treat reverse-engineered requirements as candidates until reviewed and
+  formally promoted.
 - Treat V-process activity recommendations as decision support, not approval.
 - Keep formal ALM systems authoritative for baselines, workflow state,
   signatures, approvals, and audit records.
@@ -78,6 +85,10 @@ Human Decision Needed:
 Never add real customer data, proprietary SOP text, copyrighted standards text,
 server names, tokens, passwords, private keys, internal hostnames, or private DB
 files.
+
+Do not use this repository to support unauthorized third-party reverse
+engineering, DRM or license-enforcement bypass, credential extraction, secret
+discovery, malware development, or evasion workflows.
 
 Do not commit generated SQLite databases, bytecode caches, local demo output, or
 temporary scan artifacts.
@@ -120,4 +131,3 @@ The narrow, useful claim is:
 AI-assisted engineering needs a durable graph of why, not only faster generation
 of what.
 ```
-

@@ -1,0 +1,157 @@
+{
+  "reverse_engineering_profile": {
+    "id": "RE-DEMO-001",
+    "title": "Fictional legacy timeout module recovery",
+    "scope": "authorized internal maintenance analysis",
+    "system_type": "regulated embedded software",
+    "authorization_boundary": "owner-supplied source, tests, configuration, and sanitized logs only",
+    "status": "candidate"
+  },
+  "sources": [
+    {
+      "id": "SRC-FW-TIMEOUT",
+      "node_type": "SourceFile",
+      "title": "Fictional timeout control module",
+      "path": "firmware/control/timeout_monitor.c",
+      "summary": "Checks sensor freshness and requests safe-state transition when timeout logic triggers.",
+      "status": "observed"
+    },
+    {
+      "id": "SRC-CFG-PROFILE",
+      "node_type": "ConfigItem",
+      "title": "sensor_timeout_ms",
+      "path": "config/product_profile.json",
+      "summary": "Configurable timeout threshold used by the timeout monitor.",
+      "status": "observed"
+    },
+    {
+      "id": "TEST-TIMEOUT-SAFE-STATE",
+      "node_type": "Evidence",
+      "title": "Timeout safe-state unit test",
+      "path": "tests/test_timeout_monitor.py",
+      "summary": "Fictional test evidence showing that a missing sensor sample triggers safe-state request.",
+      "status": "observed"
+    }
+  ],
+  "observed_behaviors": [
+    {
+      "id": "BEH-SAFE-STATE-ON-TIMEOUT",
+      "node_type": "ObservedBehavior",
+      "title": "Controller requests safe state when sensor sample is stale",
+      "body": "The timeout monitor compares elapsed time since the last valid sensor sample against a configured threshold and requests a safe-state transition when the threshold is exceeded.",
+      "confidence": 0.82,
+      "status": "observed"
+    },
+    {
+      "id": "BEH-DIAG-EVENT-ON-TIMEOUT",
+      "node_type": "ObservedBehavior",
+      "title": "Diagnostic event is emitted when timeout transition occurs",
+      "body": "A diagnostic event is emitted when timeout handling requests safe state.",
+      "confidence": 0.66,
+      "status": "observed"
+    }
+  ],
+  "requirement_candidates": [
+    {
+      "id": "RC-SAFE-STATE-TIMEOUT",
+      "node_type": "RequirementCandidate",
+      "title": "Controller shall request safe state on sensor timeout",
+      "body": "If the primary speed sensor has no valid sample for the configured timeout, the controller shall request a safe-state transition.",
+      "confidence": 0.74,
+      "status": "needs_review",
+      "review_question": "Confirm whether the configured timeout is product-profile specific or fixed by the safety concept."
+    },
+    {
+      "id": "RC-DIAG-EVENT-TIMEOUT",
+      "node_type": "RequirementCandidate",
+      "title": "Controller shall emit a diagnostic event on timeout transition",
+      "body": "When sensor timeout handling requests safe state, the controller shall emit a diagnostic event for service and traceability.",
+      "confidence": 0.58,
+      "status": "needs_review",
+      "review_question": "Confirm whether diagnostic event emission is required behavior or an implementation detail."
+    }
+  ],
+  "open_issues": [
+    {
+      "id": "OI-TIMEOUT-OWNER",
+      "node_type": "OpenIssue",
+      "title": "Timeout configuration authority is unclear",
+      "body": "The analyzed artifacts do not identify who owns the allowed timeout range or approval authority.",
+      "status": "open"
+    },
+    {
+      "id": "OI-DIAG-REQUIREMENT",
+      "node_type": "OpenIssue",
+      "title": "Diagnostic event requirement status is unclear",
+      "body": "The test suggests diagnostic event emission, but no formal requirement source is available in the analyzed artifact set.",
+      "status": "open"
+    }
+  ],
+  "trace_candidates": [
+    {
+      "source_id": "SRC-FW-TIMEOUT",
+      "target_id": "BEH-SAFE-STATE-ON-TIMEOUT",
+      "edge_type": "observed_in",
+      "rationale": "The fictional timeout module contains the safe-state timeout behavior.",
+      "confidence": 0.82
+    },
+    {
+      "source_id": "SRC-CFG-PROFILE",
+      "target_id": "BEH-SAFE-STATE-ON-TIMEOUT",
+      "edge_type": "reads_config",
+      "rationale": "The behavior depends on the configurable timeout threshold.",
+      "confidence": 0.75
+    },
+    {
+      "source_id": "BEH-SAFE-STATE-ON-TIMEOUT",
+      "target_id": "RC-SAFE-STATE-TIMEOUT",
+      "edge_type": "implements_candidate",
+      "rationale": "Observed behavior supports a candidate requirement for safe-state transition on timeout.",
+      "confidence": 0.74
+    },
+    {
+      "source_id": "TEST-TIMEOUT-SAFE-STATE",
+      "target_id": "RC-SAFE-STATE-TIMEOUT",
+      "edge_type": "verified_by",
+      "rationale": "The fictional unit test provides candidate verification evidence.",
+      "confidence": 0.7
+    },
+    {
+      "source_id": "RC-SAFE-STATE-TIMEOUT",
+      "target_id": "OI-TIMEOUT-OWNER",
+      "edge_type": "blocked_by",
+      "rationale": "The candidate should not be promoted until timeout ownership and approval authority are confirmed.",
+      "confidence": 0.85
+    },
+    {
+      "source_id": "BEH-DIAG-EVENT-ON-TIMEOUT",
+      "target_id": "RC-DIAG-EVENT-TIMEOUT",
+      "edge_type": "implements_candidate",
+      "rationale": "Observed diagnostic behavior may indicate a recoverable requirement.",
+      "confidence": 0.58
+    },
+    {
+      "source_id": "RC-DIAG-EVENT-TIMEOUT",
+      "target_id": "OI-DIAG-REQUIREMENT",
+      "edge_type": "blocked_by",
+      "rationale": "The requirement status must be confirmed before formal promotion.",
+      "confidence": 0.78
+    }
+  ],
+  "recommended_activities": [
+    {
+      "id": "RE-ACT-IMPACT",
+      "activity_id": "ACT-IMPACT",
+      "title": "Run impact analysis on recovered timeout behavior",
+      "trigger": "Recovered behavior affects safe-state transition.",
+      "rationale": "Behavior that changes safe-state entry criteria needs affected requirements, tests, and risk controls identified."
+    },
+    {
+      "id": "RE-ACT-TRACE",
+      "activity_id": "ACT-TRACE",
+      "title": "Review trace candidates before ALM export",
+      "trigger": "Recovered requirements are candidates inferred from implementation and tests.",
+      "rationale": "Trace candidates must be reviewed before becoming authoritative ALM links."
+    }
+  ]
+}

@@ -89,6 +89,8 @@ engineering structure to answer practical questions later:
   regulated approval workflows.
 - It is not a copy of any commercial ALM product.
 - It does not include proprietary standards text or confidential project data.
+- It is not a tool for unauthorized third-party reverse engineering, DRM
+  bypass, credential extraction, or secret discovery.
 
 ## Intended Boundary
 
@@ -118,6 +120,7 @@ Standards/SOP Knowledge
 4. Track unresolved process or compliance questions before formal ALM entry.
 5. Explain why a process activity was selected, skipped, or escalated.
 6. Preserve engineering context during AI-assisted or vibe-coded development.
+7. Recover requirement and trace candidates from authorized legacy artifacts.
 
 ## Repository Layout
 
@@ -154,6 +157,10 @@ for short posts, longer announcements, and audience notes.
 
 For nearby projects and positioning, see
 [docs/08_related_work_and_positioning.md](docs/08_related_work_and_positioning.md).
+
+For authorized legacy-system recovery, see
+[docs/09_reverse_engineering_workflow.md](docs/09_reverse_engineering_workflow.md)
+and [examples/sample_reverse_engineering_input.json](examples/sample_reverse_engineering_input.json).
 
 ## Quick Start
 
