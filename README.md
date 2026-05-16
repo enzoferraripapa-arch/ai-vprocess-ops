@@ -6,6 +6,14 @@ This project is a public, sanitized reference architecture for using modern AI
 to support V-process operation without training a custom model and without
 replacing formal ALM systems.
 
+It is also useful for vibe coding: move fast with an LLM, but keep the
+engineering memory that lets you review, test, explain, and safely change the
+result later.
+
+```text
+Vibe code fast. Keep the engineering memory.
+```
+
 ## Core Thesis
 
 The LLM is not the source of truth.
@@ -32,6 +40,24 @@ Humans and formal tools keep final authority.
   risks, standards references, and unresolved issues.
 - A low-cost architecture for review preparation, trace candidate generation,
   activity recommendation, and decision explainability.
+
+## For Vibe Coders
+
+Vibe coding is fast, but the engineering context can disappear quickly.
+
+This project gives AI-assisted coding sessions a lightweight graph memory:
+requirements, decisions, tests, unresolved issues, and external references are
+stored as nodes and edges instead of being buried in chat history.
+
+Use it when you want to move fast with an LLM while still keeping enough
+engineering structure to answer practical questions later:
+
+- Why was this feature built?
+- Which requirement or user need does it serve?
+- Which test should cover it?
+- Which decision changed the design?
+- What is still unresolved?
+- What could break if this changes again?
 
 ## What This Is Not
 
@@ -69,6 +95,7 @@ Standards/SOP Knowledge
    references.
 4. Track unresolved process or compliance questions before formal ALM entry.
 5. Explain why a process activity was selected, skipped, or escalated.
+6. Preserve engineering context during AI-assisted or vibe-coded development.
 
 ## Repository Layout
 
@@ -94,9 +121,9 @@ benchmarks/
 From the repository root:
 
 ```bash
-python public/ai-vprocess-ops/prototype/vprocess_graph.py \
-  --db public/ai-vprocess-ops/.demo/vprocess_demo.db \
-  --input public/ai-vprocess-ops/examples/sample_project_input.json
+python prototype/vprocess_graph.py \
+  --db .demo/vprocess_demo.db \
+  --input examples/sample_project_input.json
 ```
 
 The demo creates a local SQLite DB, loads fictional requirements and standards
@@ -112,4 +139,3 @@ activities.
 - Choose a license before publishing as a standalone GitHub repository.
 - Treat the architecture as decision support, not as an autonomous compliance
   authority.
-
