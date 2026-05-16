@@ -14,6 +14,8 @@ result later.
 Vibe code fast. Keep the engineering memory.
 ```
 
+AI coding needs engineering memory, not just better autocomplete.
+
 ## Core Thesis
 
 The LLM is not the source of truth.
