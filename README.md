@@ -177,6 +177,40 @@ GitHub Actions also runs:
 - CodeQL and Dependency Review as GitHub-native security checks.
 - Dependabot for GitHub Actions and pinned Python development-tool updates.
 
+Current baseline:
+
+- `CI` verifies that the Python prototype compiles, the unit tests pass, the
+  public safety gate passes, and the demo can build/query the sample graph.
+- `Ruff and Bandit` provide a small static quality/security layer for Python
+  without changing the prototype's dependency-free runtime.
+- `Security` runs CodeQL on the Python code and Dependency Review on pull
+  requests that change dependencies.
+- `Dependabot` keeps GitHub Actions and pinned development tools visible as
+  reviewable update pull requests.
+- The public safety gate rejects common publication accidents: committed SQLite
+  databases, bytecode caches, private-key-like material, token-like strings,
+  internal project markers, invalid JSON, broken SQL schema loading, broad
+  workflow permissions, `pull_request_target`, and workflows that require
+  repository secrets.
+
+Useful local checks:
+
+```bash
+python -m compileall -q prototype tools tests
+python -m unittest discover -s tests
+python tools/check_public_safety.py
+python -m ruff check .
+python -m bandit -q -r prototype tools
+python prototype/vprocess_graph.py \
+  --db .demo/vprocess_demo.db \
+  --input examples/sample_project_input.json
+```
+
+The goal is not to claim that automation proves engineering quality. The goal
+is to make low-cost mistakes visible before they reach users: broken examples,
+lost trace behavior, leaked private context, unsafe workflow permissions, and
+unreviewed dependency/tooling drift.
+
 ## Public Release Rules
 
 - Use fictional or sanitized examples only.
