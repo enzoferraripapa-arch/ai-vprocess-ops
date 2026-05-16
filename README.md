@@ -1,5 +1,8 @@
 # AI-Native V-Process Operations
 
+[![CI](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/ci.yml/badge.svg)](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/ci.yml)
+[![Security](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/security.yml/badge.svg)](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/security.yml)
+
 LLM + graph database + standards knowledge for engineering decision support.
 
 This project is a public, sanitized reference architecture for using modern AI
@@ -125,6 +128,12 @@ examples/
 prototype/
   Dependency-free Python demo using SQLite.
 
+tests/
+  Standard-library unit tests for the Python prototype.
+
+tools/
+  Public safety checks for secrets, internal markers, JSON, Python, schema, and workflows.
+
 benchmarks/
   Templates for measuring output quality and cost reduction.
 ```
@@ -147,6 +156,26 @@ python prototype/vprocess_graph.py \
 The demo creates a local SQLite DB, loads fictional requirements and standards
 references, creates trace candidates, and prints recommended V-process
 activities.
+
+## Quality And Safety Gates
+
+This repository intentionally keeps the first safety layer simple and auditable.
+The core local gate uses only the Python standard library:
+
+```bash
+python -m unittest discover -s tests
+python tools/check_public_safety.py
+```
+
+GitHub Actions also runs:
+
+- Python compile and unit tests on Python 3.11, 3.12, and 3.13.
+- The public safety gate for secret-like strings, internal project markers,
+  generated DB artifacts, JSON validity, SQL schema loading, and workflow
+  permissions.
+- Ruff and Bandit for Python quality and static security checks.
+- CodeQL and Dependency Review as GitHub-native security checks.
+- Dependabot for GitHub Actions and pinned Python development-tool updates.
 
 ## Public Release Rules
 

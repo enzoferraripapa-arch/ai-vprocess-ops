@@ -13,7 +13,6 @@ import json
 import sqlite3
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "schema" / "001_core.sql"
 DEFAULT_TRACE = ROOT / "examples" / "sample_trace_graph.json"
