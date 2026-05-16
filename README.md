@@ -45,6 +45,9 @@ Humans and formal tools keep final authority.
 
 Vibe coding is fast, but the engineering context can disappear quickly.
 
+If you have never lost the reason behind AI-generated code, you may not need
+this yet. If you have, this project is for you.
+
 This project gives AI-assisted coding sessions a lightweight graph memory:
 requirements, decisions, tests, unresolved issues, and external references are
 stored as nodes and edges instead of being buried in chat history.
