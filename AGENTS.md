@@ -30,6 +30,10 @@ Before changing or extending the project, read these files in order:
 6. `examples/sample_trace_graph.json`
 7. `prototype/vprocess_graph.py`
 
+Use `docs/10_ai_agent_build_spec.md` when a user wants an AI coding agent to
+build a project-specific scanner, graph importer, reverse-engineering pipeline,
+ALM export adapter, or human review report from this specification.
+
 Use `docs/08_related_work_and_positioning.md` when explaining how this differs
 from agent-memory, requirements-as-code, code-context graph, or GraphRAG tools.
 

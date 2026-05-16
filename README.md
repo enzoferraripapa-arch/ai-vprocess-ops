@@ -33,6 +33,14 @@ If you are using Codex, Claude Code, Cursor, or another coding agent, start with
 [AGENTS.md](AGENTS.md). It defines the read order, operating boundary, expected
 recommendation format, and publication safety rules for this repository.
 
+This repository is also a build specification for AI coding agents. Give it to
+an agent together with an authorized target project and ask it to build a local
+engineering-memory pipeline: artifact inventory, graph importer, reverse
+engineering pass, V-process recommendations, and human review report.
+
+See [docs/10_ai_agent_build_spec.md](docs/10_ai_agent_build_spec.md) for prompt
+examples.
+
 ## Core Thesis
 
 The LLM is not the source of truth.
@@ -129,7 +137,7 @@ AGENTS.md
   Operating instructions for AI coding agents.
 
 docs/
-  Concept, operating model, promotion notes, and related-work positioning.
+  Concept, operating model, prompt examples, promotion notes, and positioning.
 
 schema/
   Minimal SQLite schema for the graph and decision layer.
@@ -161,6 +169,9 @@ For nearby projects and positioning, see
 For authorized legacy-system recovery, see
 [docs/09_reverse_engineering_workflow.md](docs/09_reverse_engineering_workflow.md)
 and [examples/sample_reverse_engineering_input.json](examples/sample_reverse_engineering_input.json).
+
+For AI agent prompt examples, see
+[docs/10_ai_agent_build_spec.md](docs/10_ai_agent_build_spec.md).
 
 ## Quick Start
 
