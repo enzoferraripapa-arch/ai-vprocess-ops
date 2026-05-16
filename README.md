@@ -19,6 +19,13 @@ Vibe code fast. Keep the engineering memory.
 
 AI coding needs engineering memory, not just better autocomplete.
 
+Not another prompt template.
+
+This repository is a graph-backed build specification for AI agents that need to
+create project-specific engineering memory: requirements, decisions, trace
+candidates, evidence, open issues, V-process recommendations, and authorized
+reverse-engineering reports.
+
 Shareable one-liner:
 
 ```text

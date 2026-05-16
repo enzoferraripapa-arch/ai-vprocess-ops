@@ -10,12 +10,31 @@ https://github.com/enzoferraripapa-arch/ai-vprocess-ops
 
 AI coding needs engineering memory, not just better autocomplete.
 
+## High-Context One-Liner
+
+Not another prompt template: a graph-backed build spec for AI agents that need
+to create project-specific engineering memory.
+
 ## Short Pitch
 
 AI-Native V-Process Operations is a lightweight graph memory for AI-assisted
 engineering. It stores requirements, decisions, tests, evidence, unresolved
 issues, and external references as nodes and edges so the reason behind
 AI-generated work does not disappear into chat history.
+
+## High-Context Pitch
+
+This is for people who already know that prompt patterns are not enough.
+
+`ai-vprocess-ops` is a graph-backed build specification for AI coding agents.
+Give it to Codex, Claude Code, Cursor, or another agent together with an
+authorized target project, then ask it to build a local engineering-memory
+pipeline: artifact inventory, graph importer, reverse-engineering pass,
+V-process recommendations, and human review report.
+
+The point is not to write better prompts. The point is to make the agent build a
+project-specific system that preserves requirements, decisions, trace
+candidates, evidence, open issues, and review gates.
 
 ## For Vibe Coders
 
@@ -63,26 +82,113 @@ https://github.com/enzoferraripapa-arch/ai-vprocess-ops
 Title:
 
 ```text
-Show HN: A graph memory for AI-assisted engineering and vibe coding
+Show HN: A graph-backed build spec for AI coding agents
 ```
 
 Body:
 
 ```text
-I built a small public reference architecture for preserving engineering memory
-during AI-assisted development.
+I built a small public reference repo for something I think AI coding tools are
+missing: engineering memory.
 
-The goal is not to train an LLM or replace an ALM system. The goal is to keep
-requirements, decisions, trace candidates, test evidence, and unresolved issues
-as structured graph context so they do not vanish into chat history.
+Not another prompt template.
+Not model training.
+Not a replacement for ALM.
 
-It started from V-process / regulated engineering thinking, but I think the same
-problem appears in vibe coding: code gets generated quickly, but the reason
-behind it is easy to lose.
+It is a graph-backed build specification that an AI coding agent can use to
+create a project-specific engineering-memory pipeline: requirements, decisions,
+trace candidates, evidence, open issues, V-process recommendations, authorized
+reverse-engineering reports, and human review gates.
+
+The LLM is not the source of truth. The graph is the durable engineering memory.
+Humans and formal tools keep final authority.
 
 Repo:
 https://github.com/enzoferraripapa-arch/ai-vprocess-ops
 ```
+
+## X / Short Thread
+
+```text
+AI coding does not need another prompt template.
+
+It needs engineering memory.
+```
+
+```text
+I published `ai-vprocess-ops`:
+a graph-backed build spec for AI agents that need to create project-specific
+engineering memory.
+
+Requirements.
+Decisions.
+Trace candidates.
+Evidence.
+Open issues.
+Review gates.
+```
+
+```text
+The idea is simple:
+
+Do not train the model.
+Do not make the LLM the source of truth.
+Store engineering state in a graph.
+Let the agent read it and build project-specific pipelines around it.
+```
+
+```text
+Useful for:
+
+- AI coding sessions that lose rationale
+- V-process decision support
+- trace candidate generation
+- authorized reverse engineering
+- pre-ALM review preparation
+```
+
+```text
+Repo:
+https://github.com/enzoferraripapa-arch/ai-vprocess-ops
+```
+
+## GitHub Related-Project Comment
+
+Use this only when it is directly relevant to a discussion about agent memory,
+MCP, context engineering, requirements-as-code, traceability, or AI coding
+guardrails.
+
+```text
+This is related, but from a slightly different angle.
+
+Most agent-memory work focuses on helping the assistant remember facts,
+preferences, patterns, or prior tasks.
+
+I am exploring engineering memory instead: requirements, decisions, trace
+candidates, evidence, open issues, V-process activity recommendations, and
+human review gates stored as graph context.
+
+The repo is not a finished platform. It is a build specification an AI coding
+agent can read to create a project-specific pipeline.
+
+https://github.com/enzoferraripapa-arch/ai-vprocess-ops
+```
+
+## Where Not To Lead
+
+Do not lead with generic "Vibe Coding best practices" or "how to write better
+prompts." That framing attracts readers who expect tutorials, prompt templates,
+or beginner workflow advice.
+
+Lead with this instead:
+
+```text
+Not another prompt template.
+A graph-backed build spec for AI agents that need engineering memory.
+```
+
+The best audience already understands AGENTS.md, MCP, repo-local memory,
+context engineering, CI gates, and the limits of chat history.
 
 ## AI Engineering Community Post
 
@@ -153,6 +259,8 @@ https://github.com/enzoferraripapa-arch/ai-vprocess-ops
   decisions.
 - Hacker News `Show HN`: lead with the small, auditable prototype and the
   distinction from model training.
+- GitHub issues/discussions in adjacent tools: lead with graph-backed
+  engineering memory, not with generic AI coding advice.
 
 ## Suggested Positioning Line
 
