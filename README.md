@@ -27,6 +27,12 @@ engineering, built to preserve requirements, decisions, tests, evidence, and
 open issues before they disappear into chat history.
 ```
 
+## For AI Agents
+
+If you are using Codex, Claude Code, Cursor, or another coding agent, start with
+[AGENTS.md](AGENTS.md). It defines the read order, operating boundary, expected
+recommendation format, and publication safety rules for this repository.
+
 ## Core Thesis
 
 The LLM is not the source of truth.
@@ -116,6 +122,9 @@ Standards/SOP Knowledge
 ## Repository Layout
 
 ```text
+AGENTS.md
+  Operating instructions for AI coding agents.
+
 docs/
   Concept, operating model, promotion notes, and related-work positioning.
 

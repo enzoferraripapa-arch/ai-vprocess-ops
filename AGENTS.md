@@ -1,0 +1,123 @@
+# Agent Instructions
+
+Use this repository as an engineering-memory reference architecture for
+AI-assisted V-process decision support.
+
+## Core Rule
+
+The LLM is not the source of truth.
+
+```text
+Model weights stay fixed.
+Engineering state lives in the database.
+The LLM reads structured graph context and proposes bounded engineering actions.
+Humans and formal tools keep final authority.
+```
+
+Do not describe this workflow as model training or fine-tuning. It is external
+memory: requirements, decisions, trace candidates, evidence, open issues, SOP
+references, and standards references are stored outside the model.
+
+## Read Order
+
+Before changing or extending the project, read these files in order:
+
+1. `README.md`
+2. `docs/02_learning_vs_external_memory.md`
+3. `docs/03_v_process_decision_graph.md`
+4. `schema/001_core.sql`
+5. `examples/sample_project_input.json`
+6. `examples/sample_trace_graph.json`
+7. `prototype/vprocess_graph.py`
+
+Use `docs/08_related_work_and_positioning.md` when explaining how this differs
+from agent-memory, requirements-as-code, code-context graph, or GraphRAG tools.
+
+## Intended Work
+
+When asked to use or extend this repository, preserve this operating model:
+
+- Store engineering context as graph nodes and edges.
+- Keep examples fictional and sanitized.
+- Preserve rationale, not only final output.
+- Connect each recommendation to the requirement, change, issue, SOP, standard
+  reference, or policy that triggered it.
+- Treat trace links as candidates until reviewed.
+- Treat V-process activity recommendations as decision support, not approval.
+- Keep formal ALM systems authoritative for baselines, workflow state,
+  signatures, approvals, and audit records.
+
+## Expected Agent Output
+
+When producing analysis or recommendations from this repository, prefer this
+shape:
+
+```text
+Recommendation:
+  The V-process activity or review action being proposed.
+
+Trigger:
+  The requirement, change request, project attribute, policy, open issue, SOP,
+  or standard reference that caused the recommendation.
+
+Rationale:
+  Why the action is needed.
+
+Trace:
+  Relevant node IDs and edge types.
+
+Open Issues:
+  Anything that blocks approval or export to a formal ALM system.
+
+Human Decision Needed:
+  The explicit decision that cannot be delegated to the LLM.
+```
+
+## Safety And Publication Rules
+
+Never add real customer data, proprietary SOP text, copyrighted standards text,
+server names, tokens, passwords, private keys, internal hostnames, or private DB
+files.
+
+Do not commit generated SQLite databases, bytecode caches, local demo output, or
+temporary scan artifacts.
+
+Before committing changes, run the relevant local checks:
+
+```bash
+python -m compileall -q prototype tools tests
+python -m unittest discover -s tests
+python tools/check_public_safety.py
+python -m ruff check .
+python -m bandit -q -r prototype tools
+```
+
+If the prototype behavior changes, also run:
+
+```bash
+python prototype/vprocess_graph.py \
+  --db .demo/vprocess_demo.db \
+  --input examples/sample_project_input.json
+```
+
+Remove `.demo/`, `.ruff_cache/`, and `__pycache__/` directories after local
+verification.
+
+## Do Not Claim
+
+Do not claim:
+
+- Automatic compliance.
+- Replacement of human engineering judgement.
+- Replacement of formal ALM systems.
+- Replacement of agent-memory tools.
+- Production readiness.
+- That generated code is safe because it passed this repository's checks.
+
+The narrow, useful claim is:
+
+```text
+AI-assisted engineering needs a durable graph of why, not only faster generation
+of what.
+```
+
