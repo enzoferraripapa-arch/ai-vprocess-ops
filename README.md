@@ -16,6 +16,14 @@ Vibe code fast. Keep the engineering memory.
 
 AI coding needs engineering memory, not just better autocomplete.
 
+Shareable one-liner:
+
+```text
+AI-Native V-Process Operations is a lightweight graph memory for AI-assisted
+engineering, built to preserve requirements, decisions, tests, evidence, and
+open issues before they disappear into chat history.
+```
+
 ## Core Thesis
 
 The LLM is not the source of truth.
@@ -120,6 +128,11 @@ prototype/
 benchmarks/
   Templates for measuring output quality and cost reduction.
 ```
+
+## Share This
+
+If this resonates, see [docs/07_promotion_kit.md](docs/07_promotion_kit.md)
+for short posts, longer announcements, and audience notes.
 
 ## Quick Start
 
