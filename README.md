@@ -117,7 +117,7 @@ Standards/SOP Knowledge
 
 ```text
 docs/
-  Concept and operating model.
+  Concept, operating model, promotion notes, and related-work positioning.
 
 schema/
   Minimal SQLite schema for the graph and decision layer.
@@ -142,6 +142,9 @@ benchmarks/
 
 If this resonates, see [docs/07_promotion_kit.md](docs/07_promotion_kit.md)
 for short posts, longer announcements, and audience notes.
+
+For nearby projects and positioning, see
+[docs/08_related_work_and_positioning.md](docs/08_related_work_and_positioning.md).
 
 ## Quick Start
 

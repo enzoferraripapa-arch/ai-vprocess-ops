@@ -84,6 +84,83 @@ Repo:
 https://github.com/enzoferraripapa-arch/ai-vprocess-ops
 ```
 
+## AI Engineering Community Post
+
+Title:
+
+```text
+Engineering memory for AI coding: V-process decisions as a small graph
+```
+
+Body:
+
+```text
+I published a small open-source prototype around a problem I keep seeing in
+AI-assisted development:
+
+The code can be generated quickly, but the engineering reason behind it is easy
+to lose.
+
+There are already strong projects around agent memory, MCP memory, requirements
+as context, and code context graphs. This project is narrower: it explores
+engineering memory for V-process decisions.
+
+The prototype stores requirements, decisions, trace candidates, tests, evidence,
+open issues, SOP references, and standards references as graph nodes and edges.
+The LLM is not the source of truth and is not trained. It reads the graph and
+helps propose what should be reviewed, tested, escalated, or traced next.
+
+It is not a replacement for formal ALM tools. It is a lightweight pre-ALM /
+decision-support layer for AI-assisted engineering and vibe coding.
+
+Repo:
+https://github.com/enzoferraripapa-arch/ai-vprocess-ops
+
+Related positioning:
+https://github.com/enzoferraripapa-arch/ai-vprocess-ops/blob/main/docs/08_related_work_and_positioning.md
+
+I would be interested in feedback from people building agent memory, MCP tools,
+requirements-as-code, or AI coding workflows.
+```
+
+## Short Community Reply
+
+Use this when replying to a discussion about AI coding memory, context loss, or
+requirements traceability:
+
+```text
+This is close to the problem I am exploring, but from a V-process / engineering
+decision angle rather than general agent memory.
+
+Others are building memory for agents. I am trying to preserve engineering
+memory: requirements, decisions, trace candidates, tests, evidence, open issues,
+SOP references, and standards references, so an LLM can help decide what should
+be reviewed, tested, escalated, or traced next.
+
+Prototype:
+https://github.com/enzoferraripapa-arch/ai-vprocess-ops
+```
+
+## Suggested Communities
+
+- `r/vibecoding`: lead with lost context, design rationale, and safer vibe
+  coding.
+- `r/ClaudeCode`: lead with cross-session engineering memory and review
+  preparation.
+- `r/AI_Agents`: lead with graph memory as state management, not just recall.
+- `r/mcp`: lead with future MCP integration potential and local-first context.
+- `r/ContextEngineering`: lead with explicit graph context for engineering
+  decisions.
+- Hacker News `Show HN`: lead with the small, auditable prototype and the
+  distinction from model training.
+
+## Suggested Positioning Line
+
+```text
+Others are building memory for agents. This project explores engineering memory
+for AI-assisted V-process decisions.
+```
+
 ## Target Audience
 
 - Engineers using LLMs for real code, not just demos.
@@ -108,4 +185,3 @@ https://github.com/enzoferraripapa-arch/ai-vprocess-ops
 - Do not claim replacement of formal ALM workflows.
 - Do not claim the prototype is production-ready.
 - Do not publish proprietary standards text or confidential project data.
-
