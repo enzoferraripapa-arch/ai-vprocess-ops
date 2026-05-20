@@ -63,7 +63,7 @@ class McpReadonlyStubTests(unittest.TestCase):
             },
         )
 
-        content = response["result"]["content"][0]["json"]
+        content = json.loads(response["result"]["content"][0]["text"])
         reached = {row["node_id"] for row in content}
         self.assertIn("REQ-001", reached)
         self.assertIn("STD-SW-TRACE-01", reached)
@@ -139,7 +139,7 @@ class McpReadonlyStubTests(unittest.TestCase):
             text=True,
         )
         response = json.loads(serve_result.stdout)
-        content = response["result"]["content"][0]["json"]
+        content = response["result"]["content"][0]["text"]
         self.assertIn("# V-Process Graph Review Report", content)
 
 

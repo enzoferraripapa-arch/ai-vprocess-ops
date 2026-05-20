@@ -8,6 +8,7 @@ is not the approval authority.
 flowchart LR
     target["Authorized target project<br/>source, tests, docs, logs"]
     importer["Project-specific scanner/importer<br/>built by an AI coding agent"]
+    reimport["Reverse-engineering sample importer<br/>candidate behaviors and traces"]
     graph["SQLite engineering-memory graph<br/>nodes, edges, decisions, policies"]
     policy["Policy matcher<br/>single and AND conditions"]
     impact["Recursive impact query<br/>SQLite CTE paths"]
@@ -19,6 +20,7 @@ flowchart LR
     queue["Optional execution queue<br/>ready, blocked, claimed, done"]
 
     target --> importer --> graph
+    target --> reimport --> graph
     graph --> policy
     graph --> impact
     graph --> prompt
@@ -56,6 +58,10 @@ python prototype/impact_query.py \
   --db .demo/vprocess_demo.db \
   --start CR-001 \
   --max-depth 2
+
+python prototype/import_reverse_engineering.py \
+  --db .demo/reverse_engineering.db \
+  --input examples/sample_reverse_engineering_input.json
 
 python prototype/llm_recommend.py \
   --db .demo/vprocess_demo.db \

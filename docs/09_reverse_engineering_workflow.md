@@ -90,6 +90,31 @@ promoted_to_requirement
 
 ## Analysis Passes
 
+## Executable Sample Import
+
+The repository includes a fictional authorized reverse-engineering sample and a
+small importer that projects it into the same SQLite graph schema:
+
+```bash
+python prototype/import_reverse_engineering.py \
+  --db .demo/reverse_engineering.db \
+  --input examples/sample_reverse_engineering_input.json
+```
+
+Then inspect candidate paths from an authorized source artifact:
+
+```bash
+python prototype/impact_query.py \
+  --db .demo/reverse_engineering.db \
+  --start SRC-FW-TIMEOUT \
+  --max-depth 3 \
+  --edge-types observed_in,implements_candidate,verified_by,blocked_by,requires_activity
+```
+
+This import is still candidate-state only. It does not promote inferred
+requirements, close open issues, or export approved links to a formal ALM
+system.
+
 ### 1. Inventory Pass
 
 Identify the authorized artifacts and create source/evidence nodes.

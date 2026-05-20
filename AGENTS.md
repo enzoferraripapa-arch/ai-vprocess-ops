@@ -117,6 +117,9 @@ If the prototype behavior changes, also run:
 python prototype/vprocess_graph.py \
   --db .demo/vprocess_demo.db \
   --input examples/sample_project_input.json
+python prototype/import_reverse_engineering.py \
+  --db .demo/reverse_engineering.db \
+  --input examples/sample_reverse_engineering_input.json
 python prototype/impact_query.py \
   --db .demo/vprocess_demo.db \
   --start CR-001 \

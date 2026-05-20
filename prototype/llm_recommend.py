@@ -22,7 +22,12 @@ EDGE_TYPES_FOR_REVIEW = (
     "uses_sop",
     "blocked_by",
     "contains",
+    "observed_in",
+    "reads_config",
+    "implements_candidate",
+    "verified_by",
 )
+MAX_REVIEW_EDGE_TYPES = 12
 MAX_EDGE_LIMIT = 200
 
 
@@ -63,9 +68,9 @@ def validate_edge_limit(edge_limit: int) -> int:
 def fetch_project_profiles(conn: sqlite3.Connection) -> list[dict]:
     rows = conn.execute(
         """
-        SELECT id, title, body, status
+        SELECT id, node_type, title, body, status
         FROM nodes
-        WHERE node_type = 'ProjectProfile'
+        WHERE node_type IN ('ProjectProfile', 'ReverseEngineeringProfile')
         ORDER BY id
         """
     ).fetchall()
@@ -73,6 +78,7 @@ def fetch_project_profiles(conn: sqlite3.Connection) -> list[dict]:
     for row in rows:
         profile = decode_json_object(row["body"])
         profile["_node_id"] = row["id"]
+        profile["_node_type"] = row["node_type"]
         profile["_title"] = row["title"]
         profile["_status"] = row["status"]
         profiles.append(profile)
@@ -126,6 +132,10 @@ def fetch_activity_matches(conn: sqlite3.Connection, profiles: list[dict]) -> li
 
 def collect_context(conn: sqlite3.Connection, edge_limit: int = 40) -> dict:
     edge_limit = validate_edge_limit(edge_limit)
+    padded_edge_types = (
+        *EDGE_TYPES_FOR_REVIEW,
+        *("__never_match_edge_type__" for _ in range(MAX_REVIEW_EDGE_TYPES - len(EDGE_TYPES_FOR_REVIEW))),
+    )
     profiles = fetch_project_profiles(conn)
     trace_edges = rows_as_dicts(
         conn.execute(
@@ -143,11 +153,11 @@ def collect_context(conn: sqlite3.Connection, edge_limit: int = 40) -> dict:
             FROM edges e
             JOIN nodes s ON s.id = e.source_id
             JOIN nodes t ON t.id = e.target_id
-            WHERE e.edge_type IN (?, ?, ?, ?, ?, ?)
+            WHERE e.edge_type IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ORDER BY e.edge_type, e.source_id, e.target_id
             LIMIT ?
             """,
-            (*EDGE_TYPES_FOR_REVIEW, edge_limit),
+            (*padded_edge_types, edge_limit),
         ).fetchall()
     )
     return {

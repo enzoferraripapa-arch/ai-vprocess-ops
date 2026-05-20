@@ -49,6 +49,11 @@ Tool names in the stub are:
 The stub caps `edge_limit` at 80 and `max_depth` at 4 so accidental large
 responses do not turn the demo into an unbounded graph dump.
 
+`tools/call` returns `content` as `type: "text"` with a JSON string payload.
+This is intentional: the stub is JSON-RPC-style and read-only, but it is not a
+complete MCP server with negotiated protocol version or structured content
+support.
+
 Windows PowerShell users may need escaped JSON quotes:
 
 ```powershell

@@ -49,6 +49,10 @@ prototype/impact_query.py
   Uses a recursive SQLite CTE to query review-relevant impact paths from a
   change request or another start node.
 
+prototype/import_reverse_engineering.py
+  Imports the fictional authorized reverse-engineering sample into graph nodes
+  and candidate trace edges.
+
 prototype/export_review_report.py
   Exports a deterministic Markdown review report from the same graph context.
 
@@ -180,6 +184,18 @@ The expected behavior is not an authoritative approval. The model should return
 a bounded review: recommended activities, supporting evidence, blocking open
 issues, trace links that need human review, and claims that must not be made
 yet.
+
+## Prompt: Import Reverse-Engineering Candidates
+
+```bash
+python prototype/import_reverse_engineering.py \
+  --db .demo/reverse_engineering.db \
+  --input examples/sample_reverse_engineering_input.json
+```
+
+The import keeps recovered behavior, requirement candidates, trace links, open
+issues, and recommended activities in candidate state. It is not a human
+promotion gate and does not write to a formal ALM system.
 
 ## Prompt: Query Recursive Impact Paths
 

@@ -143,7 +143,7 @@ def handle_request(db_path: Path, request: dict[str, Any]) -> dict:
                 raise ValueError("tools/call params.arguments must be an object")
             return jsonrpc_result(
                 request_id,
-                {"content": [{"type": "json", "json": call_tool(db_path, name, arguments)}]},
+                {"content": [{"type": "text", "text": json.dumps(call_tool(db_path, name, arguments), indent=2)}]},
             )
         return jsonrpc_error(request_id, -32601, f"method not found: {method}")
     except (FileNotFoundError, ValueError, TypeError) as exc:

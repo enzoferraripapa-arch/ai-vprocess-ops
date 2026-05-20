@@ -91,6 +91,7 @@ The current prototype is small, but it is executable end to end:
 | Capability | Command |
 | --- | --- |
 | Build a SQLite engineering-memory graph from fictional project/change data | `python prototype/vprocess_graph.py --db .demo/vprocess_demo.db --input examples/sample_project_input.json` |
+| Import an authorized reverse-engineering sample into the graph | `python prototype/import_reverse_engineering.py --db .demo/reverse_engineering.db --input examples/sample_reverse_engineering_input.json` |
 | Match single-condition and AND-condition V-process policies | included in `prototype/vprocess_graph.py` |
 | Query recursive impact paths from a change request | `python prototype/impact_query.py --db .demo/vprocess_demo.db --start CR-001 --max-depth 2` |
 | Build bounded LLM review context from the graph | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider prompt` |
@@ -114,7 +115,9 @@ Committed sample outputs:
 Current limits: this is not a production trace engine, complete MCP server,
 GraphRAG system, Neo4j-style graph platform, or formal ALM adapter. It is a
 small SQLite-backed reference implementation that proves the operating pattern
-and keeps the extension points explicit.
+and keeps the extension points explicit. Reverse-engineered requirements and
+traces remain candidates; this prototype imports them for review, but does not
+promote them to formal requirements.
 
 ## Who This Is For
 
@@ -311,6 +314,14 @@ python prototype/impact_query.py \
   --max-depth 2
 ```
 
+Import the authorized reverse-engineering sample:
+
+```bash
+python prototype/import_reverse_engineering.py \
+  --db .demo/reverse_engineering.db \
+  --input examples/sample_reverse_engineering_input.json
+```
+
 If you run a local Ollama server, you can ask a model to review the graph:
 
 ```bash
@@ -397,6 +408,9 @@ python -m bandit -q -r prototype tools templates/empty_environment/scripts bench
 python prototype/vprocess_graph.py \
   --db .demo/vprocess_demo.db \
   --input examples/sample_project_input.json
+python prototype/import_reverse_engineering.py \
+  --db .demo/reverse_engineering.db \
+  --input examples/sample_reverse_engineering_input.json
 python prototype/impact_query.py \
   --db .demo/vprocess_demo.db \
   --start CR-001 \

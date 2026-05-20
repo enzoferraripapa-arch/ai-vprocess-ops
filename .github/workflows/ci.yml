@@ -38,7 +38,9 @@ jobs:
       - name: Run demo
         run: |
           python prototype/vprocess_graph.py --db .demo/vprocess_demo.db --input examples/sample_project_input.json
+          python prototype/import_reverse_engineering.py --db .demo/reverse_engineering.db --input examples/sample_reverse_engineering_input.json --format json
           python prototype/impact_query.py --db .demo/vprocess_demo.db --start CR-001 --max-depth 2
+          python prototype/impact_query.py --db .demo/reverse_engineering.db --start SRC-FW-TIMEOUT --max-depth 3 --edge-types observed_in,implements_candidate,verified_by,blocked_by,requires_activity
           python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider prompt
           python prototype/export_review_report.py --db .demo/vprocess_demo.db --output .demo/review_report.md
           python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --list-tools
