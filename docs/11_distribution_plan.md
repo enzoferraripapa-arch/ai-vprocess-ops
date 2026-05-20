@@ -63,3 +63,8 @@ I am interested in feedback from people using AI agents on long-running
 projects, especially where context loss, traceability, or review preparation
 becomes the bottleneck.
 ```
+
+Keep promotion copy out of the README's main technical path. If a short post or
+launch note is needed, use [docs/07_promotion_kit.md](07_promotion_kit.md) as a
+drafting workspace and post only after the executable prototype and sample
+outputs match the claim being made.

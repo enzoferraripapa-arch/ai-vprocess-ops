@@ -52,14 +52,20 @@ prototype/impact_query.py
 prototype/export_review_report.py
   Exports a deterministic Markdown review report from the same graph context.
 
+prototype/mcp_readonly_stub.py
+  Exposes a small read-only JSON-RPC-style tool boundary for graph context,
+  recursive impact paths, and deterministic report text. It is useful for local
+  integration experiments, but it is not a complete MCP server.
+
 benchmarks/run_sample_benchmark.py
   Runs the fictional sample scenario and checks that the expected activities,
   open issue, trace context, and export boundary are present.
 ```
 
 The demo is deliberately small. It proves the read path from graph DB to LLM
-context, recursive SQLite impact query, and Markdown report export, but it is
-not a production trace engine, MCP server, or formal ALM adapter.
+context, recursive SQLite impact query, Markdown report export, and read-only
+tool boundary, but it is not a production trace engine, complete MCP server, or
+formal ALM adapter.
 
 ## Per-Project Empty Environment
 
@@ -199,6 +205,18 @@ python prototype/export_review_report.py \
 The report is a one-way review artifact. It does not write to Polarion, DOORS,
 Jama, Codebeamer, or another formal ALM system. Use it to review candidates
 before deciding what should be promoted into the formal tool.
+
+## Prompt: Expose Read-Only Graph Tools
+
+```bash
+python prototype/mcp_readonly_stub.py \
+  --db .demo/vprocess_demo.db \
+  --list-tools
+```
+
+Use this only as a local integration sketch. The exposed operations read graph
+context, impact paths, and review-report text. They must not mutate graph facts,
+workflow state, baselines, signatures, approvals, or formal ALM records.
 
 ## Prompt: Reverse Engineer Requirements From Authorized Code
 

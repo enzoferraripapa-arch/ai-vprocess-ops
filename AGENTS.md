@@ -29,6 +29,7 @@ Before changing or extending the project, read these files in order:
 5. `examples/sample_project_input.json`
 6. `examples/sample_trace_graph.json`
 7. `prototype/vprocess_graph.py`
+8. `docs/12_architecture.md`
 
 Use `docs/10_ai_agent_build_spec.md` when a user wants an AI coding agent to
 build a project-specific scanner, graph importer, reverse-engineering pipeline,
@@ -95,16 +96,19 @@ engineering, DRM or license-enforcement bypass, credential extraction, secret
 discovery, malware development, or evasion workflows.
 
 Do not commit generated SQLite databases, bytecode caches, local demo output, or
-temporary scan artifacts.
+temporary scan artifacts. Curated Markdown sample outputs under
+`examples/outputs/` and `benchmarks/sample_result.md` are allowed when they are
+fictional, deterministic, and reviewed.
 
 Before committing changes, run the relevant local checks:
 
 ```bash
-python -m compileall -q prototype tools tests
+python -m compileall -q prototype tools tests templates/empty_environment/scripts benchmarks
 python -m unittest discover -s tests
 python tools/check_public_safety.py
+python tools/check_sample_outputs.py
 python -m ruff check .
-python -m bandit -q -r prototype tools
+python -m bandit -q -r prototype tools templates/empty_environment/scripts benchmarks
 ```
 
 If the prototype behavior changes, also run:
@@ -113,6 +117,20 @@ If the prototype behavior changes, also run:
 python prototype/vprocess_graph.py \
   --db .demo/vprocess_demo.db \
   --input examples/sample_project_input.json
+python prototype/impact_query.py \
+  --db .demo/vprocess_demo.db \
+  --start CR-001 \
+  --max-depth 2
+python prototype/llm_recommend.py \
+  --db .demo/vprocess_demo.db \
+  --provider prompt
+python prototype/export_review_report.py \
+  --db .demo/vprocess_demo.db \
+  --output .demo/review_report.md
+python prototype/mcp_readonly_stub.py \
+  --db .demo/vprocess_demo.db \
+  --list-tools
+python benchmarks/run_sample_benchmark.py
 ```
 
 Remove `.demo/`, `.ruff_cache/`, and `__pycache__/` directories after local

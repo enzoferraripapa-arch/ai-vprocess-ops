@@ -23,16 +23,20 @@ Use this checklist before copying the package to a public GitHub repository.
 
 ## Suggested First Public Scope
 
-Publish only:
+Expected public scope:
 
 ```text
 README.md
+AGENTS.md
+.github/
 docs/
 schema/
 examples/
 prototype/
+tests/
+tools/
 benchmarks/
+templates/empty_environment/
 ```
 
 Do not publish private reference documents or local DB snapshots.
-

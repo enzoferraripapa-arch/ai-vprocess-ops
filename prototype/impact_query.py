@@ -15,6 +15,8 @@ DEFAULT_EDGE_TYPES = (
     "requires_activity",
     "uses_sop",
 )
+MAX_DEPTH = 8
+MAX_EDGE_FILTERS = 12
 
 
 def connect(db_path: Path) -> sqlite3.Connection:
@@ -26,12 +28,6 @@ def connect(db_path: Path) -> sqlite3.Connection:
     return conn
 
 
-def install_edge_filter(conn: sqlite3.Connection, edge_types: tuple[str, ...]) -> None:
-    conn.execute("DROP TABLE IF EXISTS temp.edge_filter")
-    conn.execute("CREATE TEMP TABLE edge_filter(edge_type TEXT PRIMARY KEY)")
-    conn.executemany("INSERT INTO edge_filter(edge_type) VALUES (?)", [(edge_type,) for edge_type in edge_types])
-
-
 def query_impact_paths(
     conn: sqlite3.Connection,
     start_id: str,
@@ -40,7 +36,13 @@ def query_impact_paths(
 ) -> list[dict]:
     if max_depth < 0:
         raise ValueError("max_depth must be 0 or greater")
-    install_edge_filter(conn, edge_types)
+    if max_depth > MAX_DEPTH:
+        raise ValueError(f"max_depth must be {MAX_DEPTH} or less")
+    if not edge_types:
+        raise ValueError("edge_types must include at least one edge type")
+    if len(edge_types) > MAX_EDGE_FILTERS:
+        raise ValueError(f"edge_types must include {MAX_EDGE_FILTERS} or fewer edge types")
+    padded_edge_types = (*edge_types, *("__never_match_edge_type__" for _ in range(MAX_EDGE_FILTERS - len(edge_types))))
     rows = conn.execute(
         """
         WITH RECURSIVE impact(
@@ -90,7 +92,7 @@ def query_impact_paths(
             JOIN nodes target ON target.id = edge.target_id
             WHERE impact.depth < ?
               AND instr(impact.path_ids, '|' || target.id || '|') = 0
-              AND edge.edge_type IN (SELECT edge_type FROM edge_filter)
+              AND edge.edge_type IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         )
         SELECT
             depth,
@@ -105,7 +107,7 @@ def query_impact_paths(
         FROM impact
         ORDER BY depth, display_path
         """,
-        (start_id, max_depth),
+        (start_id, max_depth, *padded_edge_types),
     ).fetchall()
     return [dict(row) for row in rows]
 

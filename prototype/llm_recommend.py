@@ -23,6 +23,7 @@ EDGE_TYPES_FOR_REVIEW = (
     "blocked_by",
     "contains",
 )
+MAX_EDGE_LIMIT = 200
 
 
 def connect(db_path: Path) -> sqlite3.Connection:
@@ -46,6 +47,17 @@ def decode_json_object(text: str | None) -> dict:
     except json.JSONDecodeError:
         return {}
     return data if isinstance(data, dict) else {}
+
+
+def validate_edge_limit(edge_limit: int) -> int:
+    if isinstance(edge_limit, bool):
+        raise ValueError("edge_limit must be an integer")
+    edge_limit = int(edge_limit)
+    if edge_limit < 1:
+        raise ValueError("edge_limit must be 1 or greater")
+    if edge_limit > MAX_EDGE_LIMIT:
+        raise ValueError(f"edge_limit must be {MAX_EDGE_LIMIT} or less")
+    return edge_limit
 
 
 def fetch_project_profiles(conn: sqlite3.Connection) -> list[dict]:
@@ -113,6 +125,7 @@ def fetch_activity_matches(conn: sqlite3.Connection, profiles: list[dict]) -> li
 
 
 def collect_context(conn: sqlite3.Connection, edge_limit: int = 40) -> dict:
+    edge_limit = validate_edge_limit(edge_limit)
     profiles = fetch_project_profiles(conn)
     trace_edges = rows_as_dicts(
         conn.execute(

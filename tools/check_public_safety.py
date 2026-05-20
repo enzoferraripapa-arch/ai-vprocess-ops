@@ -31,7 +31,7 @@ TEXT_SUFFIXES = {
     ".yaml",
 }
 DISALLOWED_ARTIFACT_SUFFIXES = {".db", ".sqlite", ".sqlite3", ".pyc", ".pyo", ".pyd", ".pem", ".p12", ".key"}
-DISALLOWED_FILENAMES = {".env"}
+DISALLOWED_FILENAMES = {".env", ".env.local"}
 
 SECRET_PATTERNS = [
     ("private-key", re.compile(r"-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----")),
@@ -50,6 +50,10 @@ INTERNAL_MARKERS = [
     ("internal-vps-marker", re.compile(r"\bv133\b", re.IGNORECASE)),
     ("private-db-name", re.compile(r"polarion_(?:knowledge|manual_architecture)\.db", re.IGNORECASE)),
     ("source-corpus-path", re.compile(r"reference_docs[/\\]", re.IGNORECASE)),
+    ("windows-user-path", re.compile(r"\b[A-Z]:\\Users\\[^\\\s]+")),
+    ("unix-home-path", re.compile(r"(?<![A-Za-z0-9_.-])/home/[A-Za-z0-9_.-]+/")),
+    ("codex-local-path", re.compile(r"(?:^|[/\\])\.codex(?:[/\\]|$)")),
+    ("claude-local-path", re.compile(r"(?:^|[/\\])\.claude(?:[/\\]|$)")),
 ]
 
 

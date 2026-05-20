@@ -3,7 +3,7 @@
 [![CI](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/ci.yml/badge.svg)](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/ci.yml)
 [![Security](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/security.yml/badge.svg)](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/security.yml)
 
-LLM + graph database + standards knowledge for engineering decision support.
+LLM + SQLite graph + standards references for engineering decision support.
 
 This project is a public, sanitized reference architecture for using modern AI
 to support V-process operation without training a custom model and without
@@ -14,18 +14,8 @@ agent when the real problem is not code generation speed, but loss of
 engineering context: requirements, traceability, decisions, evidence, tests,
 open issues, and ALM handoff reasoning.
 
-It is also useful for vibe coding: move fast with an LLM, but keep the
-engineering memory that lets you review, test, explain, and safely change the
-result later.
-
-```text
-Vibe code fast. Keep the engineering memory.
-```
-
 AI coding needs engineering memory, not just better autocomplete or agent
 memory.
-
-Not another prompt template.
 
 This repository is a graph-backed build specification for AI agents that need to
 create project-specific engineering memory: requirements, decisions, trace
@@ -106,6 +96,7 @@ The current prototype is small, but it is executable end to end:
 | Build bounded LLM review context from the graph | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider prompt` |
 | Call a local Ollama model with the same context | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider ollama --model llama3.1` |
 | Export a deterministic Markdown review report | `python prototype/export_review_report.py --db .demo/vprocess_demo.db --output .demo/review_report.md` |
+| Expose read-only JSON-RPC-style graph tools | `python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --list-tools` |
 | Run the fictional sample benchmark | `python benchmarks/run_sample_benchmark.py` |
 
 The sample benchmark currently passes when the graph selects the expected
@@ -114,10 +105,16 @@ activities; keeps the blocking open issue visible; reaches impacted
 requirements and standards through recursive paths; and preserves the export
 boundary.
 
-Current limits: this is not a production trace engine, MCP server, GraphRAG
-system, Neo4j-style graph platform, or formal ALM adapter. It is a small
-SQLite-backed reference implementation that proves the operating pattern and
-keeps the extension points explicit.
+Committed sample outputs:
+
+- [examples/outputs/sample_impact_query.md](examples/outputs/sample_impact_query.md)
+- [examples/outputs/sample_review_report.md](examples/outputs/sample_review_report.md)
+- [benchmarks/sample_result.md](benchmarks/sample_result.md)
+
+Current limits: this is not a production trace engine, complete MCP server,
+GraphRAG system, Neo4j-style graph platform, or formal ALM adapter. It is a
+small SQLite-backed reference implementation that proves the operating pattern
+and keeps the extension points explicit.
 
 ## Who This Is For
 
@@ -238,7 +235,7 @@ AGENTS.md
   Operating instructions for AI coding agents.
 
 docs/
-  Concept, operating model, prompt examples, promotion notes, and positioning.
+  Concept, architecture, operating model, prompt examples, and positioning.
 
 schema/
   Minimal SQLite schema for the graph and decision layer.
@@ -262,13 +259,13 @@ templates/empty_environment/
   Copyable per-project workspace for local engineering-memory runs.
 ```
 
-## Share This
+## Further Reading
 
-If this resonates, see [docs/07_promotion_kit.md](docs/07_promotion_kit.md)
-for short posts, longer announcements, and audience notes.
+For the system boundary and data flow, see
+[docs/12_architecture.md](docs/12_architecture.md).
 
-For launch order, target audiences, and traffic metrics, see
-[docs/11_distribution_plan.md](docs/11_distribution_plan.md).
+For the read-only JSON-RPC-style tool boundary, see
+[docs/13_mcp_integration.md](docs/13_mcp_integration.md).
 
 For nearby projects and positioning, see
 [docs/08_related_work_and_positioning.md](docs/08_related_work_and_positioning.md).
@@ -279,6 +276,9 @@ and [examples/sample_reverse_engineering_input.json](examples/sample_reverse_eng
 
 For AI agent prompt examples, see
 [docs/10_ai_agent_build_spec.md](docs/10_ai_agent_build_spec.md).
+
+For launch order and target audiences, see
+[docs/11_distribution_plan.md](docs/11_distribution_plan.md).
 
 ## Quick Start
 
@@ -331,6 +331,14 @@ python prototype/export_review_report.py \
   --output .demo/review_report.md
 ```
 
+List the read-only JSON-RPC-style graph tools:
+
+```bash
+python prototype/mcp_readonly_stub.py \
+  --db .demo/vprocess_demo.db \
+  --list-tools
+```
+
 Run the sample benchmark:
 
 ```bash
@@ -345,6 +353,7 @@ The core local gate uses only the Python standard library:
 ```bash
 python -m unittest discover -s tests
 python tools/check_public_safety.py
+python tools/check_sample_outputs.py
 ```
 
 GitHub Actions also runs:
@@ -353,6 +362,8 @@ GitHub Actions also runs:
 - The public safety gate for secret-like strings, internal project markers,
   generated DB artifacts, JSON validity, SQL schema loading, and workflow
   permissions.
+- A sample-output sync check so committed Markdown examples match the current
+  executable prototype.
 - Ruff and Bandit for Python quality and static security checks.
 - CodeQL and Dependency Review as GitHub-native security checks.
 - Dependabot for GitHub Actions and pinned Python development-tool updates.
@@ -360,27 +371,29 @@ GitHub Actions also runs:
 Current baseline:
 
 - `CI` verifies that the Python prototype compiles, the unit tests pass, the
-  public safety gate passes, and the demo can build/query the sample graph.
+  public safety gate passes, the demo can build/query the sample graph, and the
+  committed sample outputs match regenerated outputs.
 - `Ruff and Bandit` provide a small static quality/security layer for Python
   without changing the prototype's dependency-free runtime.
 - `Security` runs CodeQL on the Python code and Dependency Review on pull
   requests that change dependencies.
 - `Dependabot` keeps GitHub Actions and pinned development tools visible as
   reviewable update pull requests.
-- The public safety gate rejects common publication accidents: committed SQLite
-  databases, bytecode caches, private-key-like material, token-like strings,
-  internal project markers, invalid JSON, broken SQL schema loading, broad
-  workflow permissions, `pull_request_target`, and workflows that require
-  repository secrets.
+- The public safety and sample-output gates reject common publication
+  accidents: committed SQLite databases, private-key-like material,
+  token-like strings, internal project markers, invalid JSON, stale committed
+  sample outputs, broken SQL schema loading, broad workflow permissions,
+  `pull_request_target`, and workflows that require repository secrets.
 
 Useful local checks:
 
 ```bash
-python -m compileall -q prototype tools tests templates/empty_environment/scripts
+python -m compileall -q prototype tools tests templates/empty_environment/scripts benchmarks
 python -m unittest discover -s tests
 python tools/check_public_safety.py
+python tools/check_sample_outputs.py
 python -m ruff check .
-python -m bandit -q -r prototype tools templates/empty_environment/scripts
+python -m bandit -q -r prototype tools templates/empty_environment/scripts benchmarks
 python prototype/vprocess_graph.py \
   --db .demo/vprocess_demo.db \
   --input examples/sample_project_input.json
@@ -394,6 +407,9 @@ python prototype/llm_recommend.py \
 python prototype/export_review_report.py \
   --db .demo/vprocess_demo.db \
   --output .demo/review_report.md
+python prototype/mcp_readonly_stub.py \
+  --db .demo/vprocess_demo.db \
+  --list-tools
 python benchmarks/run_sample_benchmark.py
 ```
 
