@@ -18,6 +18,7 @@ from urllib.parse import urlparse
 EDGE_TYPES_FOR_REVIEW = (
     "requires_activity",
     "references_standard",
+    "impacts",
     "uses_sop",
     "blocked_by",
     "contains",
@@ -118,7 +119,7 @@ def collect_context(conn: sqlite3.Connection, edge_limit: int = 40) -> dict:
             FROM edges e
             JOIN nodes s ON s.id = e.source_id
             JOIN nodes t ON t.id = e.target_id
-            WHERE e.edge_type IN (?, ?, ?, ?, ?)
+            WHERE e.edge_type IN (?, ?, ?, ?, ?, ?)
             ORDER BY e.edge_type, e.source_id, e.target_id
             LIMIT ?
             """,

@@ -101,14 +101,13 @@ things:
 
 1. loading fictional project/change data into SQLite graph tables;
 2. matching simple V-process activity policies against a project profile;
-3. building an LLM review prompt from the graph, with optional local Ollama
+3. querying recursive impact paths with a SQLite CTE;
+4. building an LLM review prompt from the graph, with optional local Ollama
    execution.
 
-It is not yet a production trace engine, recursive impact-analysis engine,
-MCP server, GraphRAG system, or ALM export adapter. Those are project-specific
-extensions that should be built and tested against authorized target artifacts.
-The current graph layer is a small SQLite `nodes`/`edges` schema, not a
-Neo4j-style path-query engine.
+It is not yet a production trace engine, MCP server, GraphRAG system, or ALM
+export adapter. The current graph layer is a small SQLite `nodes`/`edges`
+schema with a basic recursive impact query, not a Neo4j-style graph platform.
 
 ## Who This Is For
 
@@ -293,6 +292,15 @@ python prototype/llm_recommend.py \
   --provider prompt
 ```
 
+Query recursive impact paths from a change request:
+
+```bash
+python prototype/impact_query.py \
+  --db .demo/vprocess_demo.db \
+  --start CR-001 \
+  --max-depth 2
+```
+
 If you run a local Ollama server, you can ask a model to review the graph:
 
 ```bash
@@ -366,6 +374,10 @@ python -m bandit -q -r prototype tools templates/empty_environment/scripts
 python prototype/vprocess_graph.py \
   --db .demo/vprocess_demo.db \
   --input examples/sample_project_input.json
+python prototype/impact_query.py \
+  --db .demo/vprocess_demo.db \
+  --start CR-001 \
+  --max-depth 2
 python prototype/llm_recommend.py \
   --db .demo/vprocess_demo.db \
   --provider prompt

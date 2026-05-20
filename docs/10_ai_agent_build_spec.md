@@ -45,6 +45,10 @@ prototype/llm_recommend.py
   Reads the SQLite graph, builds bounded LLM context, and can call a local
   Ollama model for review recommendations.
 
+prototype/impact_query.py
+  Uses a recursive SQLite CTE to query review-relevant impact paths from a
+  change request or another start node.
+
 prototype/export_review_report.py
   Exports a deterministic Markdown review report from the same graph context.
 
@@ -54,8 +58,8 @@ benchmarks/run_sample_benchmark.py
 ```
 
 The demo is deliberately small. It proves the read path from graph DB to LLM
-context and Markdown report export, but it is not a production trace engine,
-recursive impact-analysis engine, MCP server, or formal ALM adapter.
+context, recursive SQLite impact query, and Markdown report export, but it is
+not a production trace engine, MCP server, or formal ALM adapter.
 
 ## Per-Project Empty Environment
 
@@ -170,6 +174,19 @@ The expected behavior is not an authoritative approval. The model should return
 a bounded review: recommended activities, supporting evidence, blocking open
 issues, trace links that need human review, and claims that must not be made
 yet.
+
+## Prompt: Query Recursive Impact Paths
+
+```bash
+python prototype/impact_query.py \
+  --db .demo/vprocess_demo.db \
+  --start CR-001 \
+  --max-depth 2
+```
+
+This query uses SQLite recursive CTEs over the local `edges` table. It identifies
+candidate impact paths such as change request to requirement to standard
+reference. It is not a formal impact-analysis approval.
 
 ## Prompt: Export A Markdown Review Report
 

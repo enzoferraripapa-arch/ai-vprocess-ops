@@ -33,6 +33,7 @@ Current deterministic sample result:
 Result: PASS
 Expected mandatory activities: ACT-IMPACT, ACT-REGRESSION, ACT-TRACE
 Required open issue: OI-001
+Recursive impact path: CR-001 reaches affected requirements and standards
 Export boundary: present
 ```
 

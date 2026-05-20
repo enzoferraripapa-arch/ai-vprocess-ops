@@ -28,6 +28,7 @@ def load_module(path: Path, module_name: str):
 
 vprocess_graph = load_module(ROOT / "prototype" / "vprocess_graph.py", "benchmark_vprocess_graph")
 llm_recommend = load_module(ROOT / "prototype" / "llm_recommend.py", "benchmark_llm_recommend")
+impact_query = load_module(ROOT / "prototype" / "impact_query.py", "benchmark_impact_query")
 export_review_report = load_module(
     ROOT / "prototype" / "export_review_report.py",
     "benchmark_export_review_report",
@@ -61,10 +62,12 @@ def evaluate_context(context: dict) -> dict:
     }
 
 
-def render_result(metrics: dict, report: str) -> str:
+def render_result(metrics: dict, report: str, impact_paths: list[dict]) -> str:
     passed = not metrics["missing_activities"] and not metrics["missing_open_issues"]
     boundary_present = "Do not claim automatic compliance" in report and "Do not export candidate trace links" in report
-    passed = passed and boundary_present
+    impacted_nodes = {row["node_id"] for row in impact_paths}
+    impact_path_present = {"REQ-001", "REQ-002", "STD-SW-TRACE-01"}.issubset(impacted_nodes)
+    passed = passed and boundary_present and impact_path_present
     lines = [
         "# Sample Benchmark Result",
         "",
@@ -81,6 +84,7 @@ def render_result(metrics: dict, report: str) -> str:
         f"| Required open issues | `{', '.join(metrics['required_open_issues'])}` |",
         f"| Missing open issues | `{', '.join(metrics['missing_open_issues']) or 'none'}` |",
         f"| Trace edges in report context | `{metrics['trace_edge_count']}` |",
+        f"| Recursive impact path reaches requirements/standards | `{'yes' if impact_path_present else 'no'}` |",
         f"| Export boundary present | `{'yes' if boundary_present else 'no'}` |",
         "",
         "Interpretation: this benchmark only checks the deterministic sample output. It does not prove compliance,",
@@ -98,9 +102,10 @@ def run_benchmark() -> str:
             context = llm_recommend.collect_context(conn)
             report = export_review_report.render_report(context)
             metrics = evaluate_context(context)
+            impact_paths = impact_query.query_impact_paths(conn, "CR-001", max_depth=2)
         finally:
             conn.close()
-    return render_result(metrics, report)
+    return render_result(metrics, report, impact_paths)
 
 
 def main() -> int:
