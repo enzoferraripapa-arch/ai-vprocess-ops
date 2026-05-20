@@ -43,7 +43,7 @@ def render_report(context: dict) -> str:
         lines.extend(
             [
                 f"- `{policy['activity_id']}` {policy['activity_title']} [{policy['severity']}]",
-                f"  - Trigger: `{policy['trigger_key']} = {policy['trigger_value']}`",
+                f"  - Conditions: `{policy['conditions_summary']}`",
                 f"  - Recommendation: {policy['recommendation']}",
                 f"  - Rationale: {policy['rationale']}",
             ]

@@ -69,35 +69,46 @@ def fetch_project_profiles(conn: sqlite3.Connection) -> list[dict]:
 
 def fetch_activity_matches(conn: sqlite3.Connection, profiles: list[dict]) -> list[dict]:
     matches: list[dict] = []
-    seen: set[tuple[str, str, str]] = set()
+    seen: set[str] = set()
+    rows = conn.execute(
+        """
+        SELECT
+            p.id,
+            p.activity_id,
+            n.title AS activity_title,
+            p.recommendation,
+            p.rationale,
+            p.severity
+        FROM activity_policies p
+        JOIN nodes n ON n.id = p.activity_id
+        ORDER BY CASE p.severity WHEN 'high' THEN 0 ELSE 1 END, p.id
+        """
+    ).fetchall()
     for profile in profiles:
-        for key, value in profile.items():
-            if key.startswith("_"):
+        for row in rows:
+            conditions = [
+                {"key": condition["condition_key"], "value": condition["condition_value"]}
+                for condition in conn.execute(
+                    """
+                    SELECT condition_key, condition_value
+                    FROM policy_conditions
+                    WHERE policy_id = ?
+                    ORDER BY condition_key, condition_value
+                    """,
+                    (row["id"],),
+                )
+            ]
+            if not all(str(profile.get(condition["key"])) == condition["value"] for condition in conditions):
                 continue
-            rows = conn.execute(
-                """
-                SELECT
-                    p.id,
-                    p.activity_id,
-                    n.title AS activity_title,
-                    p.trigger_key,
-                    p.trigger_value,
-                    p.recommendation,
-                    p.rationale,
-                    p.severity
-                FROM activity_policies p
-                JOIN nodes n ON n.id = p.activity_id
-                WHERE p.trigger_key = ? AND p.trigger_value = ?
-                ORDER BY CASE p.severity WHEN 'high' THEN 0 ELSE 1 END, p.id
-                """,
-                (key, str(value)),
-            ).fetchall()
-            for row in rows:
-                dedupe_key = (row["id"], row["trigger_key"], row["trigger_value"])
-                if dedupe_key in seen:
-                    continue
-                seen.add(dedupe_key)
-                matches.append(dict(row))
+            if row["id"] in seen:
+                continue
+            seen.add(row["id"])
+            result = dict(row)
+            result["conditions"] = conditions
+            result["conditions_summary"] = " AND ".join(
+                f"{condition['key']}={condition['value']}" for condition in conditions
+            )
+            matches.append(result)
     return matches
 
 

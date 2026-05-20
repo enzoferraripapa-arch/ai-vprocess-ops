@@ -39,7 +39,7 @@ This repository includes a minimal local demo:
 ```text
 prototype/vprocess_graph.py
   Loads fictional project data into SQLite graph tables and prints policy-based
-  V-process activity recommendations.
+  V-process activity recommendations, including AND-condition policies.
 
 prototype/llm_recommend.py
   Reads the SQLite graph, builds bounded LLM context, and can call a local
@@ -133,7 +133,7 @@ engineering-memory pipeline that:
 4. stores the records as graph nodes and edges compatible with
    schema/001_core.sql;
 5. recommends V-process activities such as impact analysis, trace review,
-   regression test selection, and open issue triage;
+   regression test selection, approval gate preparation, and open issue triage;
 6. writes a human-readable review report;
 7. keeps all inferred requirements and traces as candidates until human review;
 8. does not ingest secrets, customer data, proprietary standards text, or

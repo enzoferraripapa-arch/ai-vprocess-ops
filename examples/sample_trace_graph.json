@@ -3,6 +3,7 @@
     {"id": "ACT-IMPACT", "node_type": "Activity", "title": "Change impact analysis"},
     {"id": "ACT-TRACE", "node_type": "Activity", "title": "Trace candidate review"},
     {"id": "ACT-REGRESSION", "node_type": "Activity", "title": "Regression test selection"},
+    {"id": "ACT-GATE", "node_type": "Activity", "title": "Approval gate preparation"},
     {"id": "OI-001", "node_type": "OpenIssue", "title": "Timeout configuration authority is not defined"}
   ],
   "edges": [

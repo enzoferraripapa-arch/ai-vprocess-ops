@@ -11,7 +11,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_ACTIVITIES = {"ACT-IMPACT", "ACT-TRACE", "ACT-REGRESSION"}
+EXPECTED_ACTIVITIES = {"ACT-GATE", "ACT-IMPACT", "ACT-TRACE", "ACT-REGRESSION"}
 REQUIRED_OPEN_ISSUES = {"OI-001"}
 
 sys.path.insert(0, str(ROOT / "prototype"))

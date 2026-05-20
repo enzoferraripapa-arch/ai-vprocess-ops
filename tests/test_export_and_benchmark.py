@@ -47,6 +47,7 @@ class ExportAndBenchmarkTests(unittest.TestCase):
         report = export_review_report.render_report(context)
 
         self.assertIn("# V-Process Graph Review Report", report)
+        self.assertIn("change_type=behavior-changing software update AND risk_level=high", report)
         self.assertIn("ACT-IMPACT", report)
         self.assertIn("Do not export candidate trace links as approved links", report)
 

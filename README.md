@@ -101,6 +101,7 @@ The current prototype is small, but it is executable end to end:
 | Capability | Command |
 | --- | --- |
 | Build a SQLite engineering-memory graph from fictional project/change data | `python prototype/vprocess_graph.py --db .demo/vprocess_demo.db --input examples/sample_project_input.json` |
+| Match single-condition and AND-condition V-process policies | included in `prototype/vprocess_graph.py` |
 | Query recursive impact paths from a change request | `python prototype/impact_query.py --db .demo/vprocess_demo.db --start CR-001 --max-depth 2` |
 | Build bounded LLM review context from the graph | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider prompt` |
 | Call a local Ollama model with the same context | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider ollama --model llama3.1` |
@@ -108,9 +109,10 @@ The current prototype is small, but it is executable end to end:
 | Run the fictional sample benchmark | `python benchmarks/run_sample_benchmark.py` |
 
 The sample benchmark currently passes when the graph selects the expected
-impact analysis, trace review, and regression-selection activities; keeps the
-blocking open issue visible; reaches impacted requirements and standards through
-recursive paths; and preserves the export boundary.
+impact analysis, trace review, regression-selection, and approval-gate
+activities; keeps the blocking open issue visible; reaches impacted
+requirements and standards through recursive paths; and preserves the export
+boundary.
 
 Current limits: this is not a production trace engine, MCP server, GraphRAG
 system, Neo4j-style graph platform, or formal ALM adapter. It is a small

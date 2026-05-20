@@ -36,7 +36,21 @@ class VProcessGraphTests(unittest.TestCase):
         recommendations = vprocess_graph.recommend_activities(conn, project_data)
         activity_ids = {row["activity_id"] for row in recommendations}
 
-        self.assertEqual({"ACT-IMPACT", "ACT-TRACE", "ACT-REGRESSION"}, activity_ids)
+        self.assertEqual({"ACT-GATE", "ACT-IMPACT", "ACT-TRACE", "ACT-REGRESSION"}, activity_ids)
+
+    def test_recommends_composite_policy_only_when_all_conditions_match(self) -> None:
+        conn, project_data = self.build_demo_graph()
+
+        recommendations = vprocess_graph.recommend_activities(conn, project_data)
+        gate_policy = next(row for row in recommendations if row["activity_id"] == "ACT-GATE")
+
+        self.assertEqual("change_type=behavior-changing software update AND risk_level=high", gate_policy["conditions_summary"])
+
+        project_data["project_profile"]["risk_level"] = "low"
+        recommendations = vprocess_graph.recommend_activities(conn, project_data)
+        activity_ids = {row["activity_id"] for row in recommendations}
+
+        self.assertNotIn("ACT-GATE", activity_ids)
 
     def test_keeps_open_issue_and_blocking_trace(self) -> None:
         conn, _project_data = self.build_demo_graph()

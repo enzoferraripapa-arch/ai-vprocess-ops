@@ -152,37 +152,19 @@ def load_decisions(conn: sqlite3.Connection, decisions_path: Path = DEFAULT_DECI
         )
 
 
-def seed_activity_policies(conn: sqlite3.Connection) -> None:
-    policies = [
-        (
-            "POL-HIGH-RISK-IMPACT",
-            "ACT-IMPACT",
-            "risk_level",
-            "high",
-            "Run change impact analysis before implementation.",
-            "High-risk changes need affected requirements, tests, and controls identified.",
-            "high",
-        ),
-        (
-            "POL-BEHAVIOR-TRACE",
-            "ACT-TRACE",
-            "change_type",
-            "behavior-changing software update",
-            "Review trace candidates before ALM export.",
-            "Behavior-changing software updates can invalidate existing requirement-test traces.",
-            "high",
-        ),
-        (
-            "POL-PARTIAL-REUSE-REGRESSION",
-            "ACT-REGRESSION",
-            "reuse_level",
-            "partial",
-            "Select regression tests for reused and modified behavior.",
-            "Partial reuse requires confirmation that unchanged behavior remains covered.",
-            "normal",
-        ),
-    ]
-    conn.executemany(
+def upsert_activity_policy(
+    conn: sqlite3.Connection,
+    policy_id: str,
+    activity_id: str,
+    conditions: list[tuple[str, str]],
+    recommendation: str,
+    rationale: str,
+    severity: str = "normal",
+) -> None:
+    if not conditions:
+        raise ValueError("activity policy must have at least one condition")
+    trigger_key, trigger_value = conditions[0]
+    conn.execute(
         """
         INSERT INTO activity_policies(
             id, activity_id, trigger_key, trigger_value, recommendation, rationale, severity
@@ -196,34 +178,104 @@ def seed_activity_policies(conn: sqlite3.Connection) -> None:
             rationale=excluded.rationale,
             severity=excluded.severity
         """,
-        policies,
+        (policy_id, activity_id, trigger_key, trigger_value, recommendation, rationale, severity),
+    )
+    conn.execute("DELETE FROM policy_conditions WHERE policy_id = ?", (policy_id,))
+    conn.executemany(
+        """
+        INSERT INTO policy_conditions(policy_id, condition_key, condition_value)
+        VALUES(?, ?, ?)
+        """,
+        [(policy_id, key, value) for key, value in conditions],
     )
 
 
-def recommend_activities(conn: sqlite3.Connection, project_data: dict) -> list[sqlite3.Row]:
-    profile = project_data["project_profile"]
-    matches: list[sqlite3.Row] = []
-    for key, value in profile.items():
-        rows = conn.execute(
+def seed_activity_policies(conn: sqlite3.Connection) -> None:
+    policies = [
+        (
+            "POL-HIGH-RISK-IMPACT",
+            "ACT-IMPACT",
+            [("risk_level", "high")],
+            "Run change impact analysis before implementation.",
+            "High-risk changes need affected requirements, tests, and controls identified.",
+            "high",
+        ),
+        (
+            "POL-BEHAVIOR-TRACE",
+            "ACT-TRACE",
+            [("change_type", "behavior-changing software update")],
+            "Review trace candidates before ALM export.",
+            "Behavior-changing software updates can invalidate existing requirement-test traces.",
+            "high",
+        ),
+        (
+            "POL-PARTIAL-REUSE-REGRESSION",
+            "ACT-REGRESSION",
+            [("reuse_level", "partial")],
+            "Select regression tests for reused and modified behavior.",
+            "Partial reuse requires confirmation that unchanged behavior remains covered.",
+            "normal",
+        ),
+        (
+            "POL-HIGH-BEHAVIOR-GATE",
+            "ACT-GATE",
+            [("risk_level", "high"), ("change_type", "behavior-changing software update")],
+            "Prepare approval gate review before formal ALM export.",
+            "High-risk behavior changes need explicit gate evidence before candidate traces are promoted.",
+            "high",
+        ),
+    ]
+    for policy_id, activity_id, conditions, recommendation, rationale, severity in policies:
+        upsert_activity_policy(conn, policy_id, activity_id, conditions, recommendation, rationale, severity)
+
+
+def conditions_for_policy(conn: sqlite3.Connection, policy_id: str) -> list[tuple[str, str]]:
+    return [
+        (row["condition_key"], row["condition_value"])
+        for row in conn.execute(
             """
-            SELECT p.*, n.title AS activity_title
-            FROM activity_policies p
-            JOIN nodes n ON n.id = p.activity_id
-            WHERE p.trigger_key = ? AND p.trigger_value = ?
-            ORDER BY CASE p.severity WHEN 'high' THEN 0 ELSE 1 END, p.id
+            SELECT condition_key, condition_value
+            FROM policy_conditions
+            WHERE policy_id = ?
+            ORDER BY condition_key, condition_value
             """,
-            (key, str(value)),
-        ).fetchall()
-        matches.extend(rows)
+            (policy_id,),
+        )
+    ]
+
+
+def policy_matches_profile(conditions: list[tuple[str, str]], profile: dict) -> bool:
+    return all(str(profile.get(key)) == value for key, value in conditions)
+
+
+def recommend_activities(conn: sqlite3.Connection, project_data: dict) -> list[dict]:
+    profile = project_data["project_profile"]
+    matches: list[dict] = []
+    rows = conn.execute(
+        """
+        SELECT p.*, n.title AS activity_title
+        FROM activity_policies p
+        JOIN nodes n ON n.id = p.activity_id
+        ORDER BY CASE p.severity WHEN 'high' THEN 0 ELSE 1 END, p.id
+        """
+    ).fetchall()
+    for row in rows:
+        conditions = conditions_for_policy(conn, row["id"])
+        if not policy_matches_profile(conditions, profile):
+            continue
+        result = dict(row)
+        result["conditions"] = [{"key": key, "value": value} for key, value in conditions]
+        result["conditions_summary"] = " AND ".join(f"{key}={value}" for key, value in conditions)
+        matches.append(result)
     return matches
 
 
-def print_context(conn: sqlite3.Connection, recommendations: list[sqlite3.Row]) -> None:
+def print_context(conn: sqlite3.Connection, recommendations: list[dict]) -> None:
     print("Recommended V-process activities")
     print("--------------------------------")
     for row in recommendations:
         print(f"- {row['activity_id']} {row['activity_title']} [{row['severity']}]")
-        print(f"  trigger: {row['trigger_key']} = {row['trigger_value']}")
+        print(f"  conditions: {row['conditions_summary']}")
         print(f"  action: {row['recommendation']}")
         print(f"  rationale: {row['rationale']}")
 
@@ -269,4 +321,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

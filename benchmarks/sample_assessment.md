@@ -13,6 +13,8 @@ bounded delta process.
 - Change impact analysis is required.
 - Trace candidate review is required.
 - Regression test selection is required.
+- Approval gate preparation is required when high risk and behavior-changing
+  software update conditions are both true.
 - Formal ALM export should wait until trace candidates are reviewed.
 - An open issue should be raised if configuration authority is unclear.
 
@@ -31,7 +33,7 @@ Current deterministic sample result:
 
 ```text
 Result: PASS
-Expected mandatory activities: ACT-IMPACT, ACT-REGRESSION, ACT-TRACE
+Expected mandatory activities: ACT-GATE, ACT-IMPACT, ACT-REGRESSION, ACT-TRACE
 Required open issue: OI-001
 Recursive impact path: CR-001 reaches affected requirements and standards
 Export boundary: present
@@ -43,5 +45,6 @@ The method fails if it:
 
 - Treats the change as documentation-only.
 - Exports trace candidates as approved records.
+- Omits approval gate preparation for the high-risk behavior change.
 - Omits regression selection.
 - Copies proprietary standards text into the output.

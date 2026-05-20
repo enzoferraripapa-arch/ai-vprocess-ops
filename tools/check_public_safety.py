@@ -158,7 +158,16 @@ def check_sql_schema() -> list[Finding]:
     except sqlite3.Error as exc:
         return [Finding("schema", relative(schema_path), f"schema does not load: {exc}")]
 
-    expected = {"activity_policies", "decision_options", "decisions", "edges", "external_refs", "nodes", "run_log"}
+    expected = {
+        "activity_policies",
+        "decision_options",
+        "decisions",
+        "edges",
+        "external_refs",
+        "nodes",
+        "policy_conditions",
+        "run_log",
+    }
     missing = expected - tables
     if missing:
         findings.append(Finding("schema", relative(schema_path), f"missing expected tables: {sorted(missing)}"))
