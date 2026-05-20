@@ -44,11 +44,18 @@ prototype/vprocess_graph.py
 prototype/llm_recommend.py
   Reads the SQLite graph, builds bounded LLM context, and can call a local
   Ollama model for review recommendations.
+
+prototype/export_review_report.py
+  Exports a deterministic Markdown review report from the same graph context.
+
+benchmarks/run_sample_benchmark.py
+  Runs the fictional sample scenario and checks that the expected activities,
+  open issue, trace context, and export boundary are present.
 ```
 
 The demo is deliberately small. It proves the read path from graph DB to LLM
-context, but it is not a production trace engine, recursive impact-analysis
-engine, MCP server, or ALM export adapter.
+context and Markdown report export, but it is not a production trace engine,
+recursive impact-analysis engine, MCP server, or formal ALM adapter.
 
 ## Per-Project Empty Environment
 
@@ -163,6 +170,18 @@ The expected behavior is not an authoritative approval. The model should return
 a bounded review: recommended activities, supporting evidence, blocking open
 issues, trace links that need human review, and claims that must not be made
 yet.
+
+## Prompt: Export A Markdown Review Report
+
+```bash
+python prototype/export_review_report.py \
+  --db .demo/vprocess_demo.db \
+  --output .demo/review_report.md
+```
+
+The report is a one-way review artifact. It does not write to Polarion, DOORS,
+Jama, Codebeamer, or another formal ALM system. Use it to review candidates
+before deciding what should be promoted into the formal tool.
 
 ## Prompt: Reverse Engineer Requirements From Authorized Code
 

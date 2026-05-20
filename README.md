@@ -305,6 +305,20 @@ python prototype/llm_recommend.py \
 The LLM output is still only decision support. Requirements, trace links, and
 activity recommendations remain candidates until human review.
 
+Export a deterministic Markdown review report:
+
+```bash
+python prototype/export_review_report.py \
+  --db .demo/vprocess_demo.db \
+  --output .demo/review_report.md
+```
+
+Run the sample benchmark:
+
+```bash
+python benchmarks/run_sample_benchmark.py
+```
+
 ## Quality And Safety Gates
 
 This repository intentionally keeps the first safety layer simple and auditable.
@@ -355,6 +369,10 @@ python prototype/vprocess_graph.py \
 python prototype/llm_recommend.py \
   --db .demo/vprocess_demo.db \
   --provider prompt
+python prototype/export_review_report.py \
+  --db .demo/vprocess_demo.db \
+  --output .demo/review_report.md
+python benchmarks/run_sample_benchmark.py
 ```
 
 The goal is not to claim that automation proves engineering quality. The goal

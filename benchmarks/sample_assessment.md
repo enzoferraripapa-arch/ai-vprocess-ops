@@ -21,6 +21,21 @@ bounded delta process.
 The method passes the first benchmark if it identifies the three mandatory
 activities, links them to project facts, and produces reviewable rationale.
 
+Run:
+
+```bash
+python benchmarks/run_sample_benchmark.py
+```
+
+Current deterministic sample result:
+
+```text
+Result: PASS
+Expected mandatory activities: ACT-IMPACT, ACT-REGRESSION, ACT-TRACE
+Required open issue: OI-001
+Export boundary: present
+```
+
 ## Fail Criteria
 
 The method fails if it:
@@ -29,4 +44,3 @@ The method fails if it:
 - Exports trace candidates as approved records.
 - Omits regression selection.
 - Copies proprietary standards text into the output.
-
