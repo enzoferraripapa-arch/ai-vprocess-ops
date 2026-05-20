@@ -57,6 +57,10 @@ prototype/decision_lifecycle.py
   Records local human decision state. Final accepted or rejected decisions carry
   reviewer, rationale, and timestamp.
 
+prototype/alm_handoff_export.py
+  Records local trace review state and exports a one-way Markdown or JSON
+  handoff package from accepted decisions and accepted trace reviews only.
+
 prototype/export_review_report.py
   Exports a deterministic Markdown review report from the same graph context.
 
@@ -73,8 +77,9 @@ benchmarks/run_sample_regression.py
 
 The demo is deliberately small. It proves the read path from graph DB to LLM
 context, recursive SQLite impact query, local human decision recording,
-Markdown report export, and read-only tool boundary, but it is not a production
-trace engine, complete MCP server, or formal ALM adapter.
+Markdown report export, one-way handoff package generation, and read-only tool
+boundary, but it is not a production trace engine, complete MCP server, or
+formal ALM adapter.
 
 ## Per-Project Empty Environment
 
@@ -243,6 +248,30 @@ The report is a one-way review artifact. It does not write to Polarion, DOORS,
 Jama, Codebeamer, or another formal ALM system. Use it to review candidates
 before deciding what should be promoted into the formal tool.
 
+## Prompt: Export A One-Way ALM Handoff Package
+
+```bash
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  trace-review \
+  --source CR-001 \
+  --target REQ-001 \
+  --edge-type impacts \
+  --status accepted \
+  --reviewed-by reviewer \
+  --rationale "Impact link to REQ-001 was reviewed."
+
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  export \
+  --format markdown \
+  --output .demo/alm_handoff.md
+```
+
+This creates a handoff artifact from accepted local review records only. It
+does not call a vendor ALM API and does not create formal approvals, signatures,
+baselines, or audit records.
+
 ## Prompt: Expose Read-Only Graph Tools
 
 ```bash
@@ -301,6 +330,8 @@ formal ALM workflow.
 
 Before implementation:
 
+- begin from the JSON or Markdown handoff artifact produced by
+  `prototype/alm_handoff_export.py`;
 - identify which graph nodes can be exported;
 - identify which records must remain candidates;
 - identify required human approval points;

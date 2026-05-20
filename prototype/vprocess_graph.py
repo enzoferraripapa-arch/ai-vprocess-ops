@@ -136,10 +136,14 @@ def load_decisions(conn: sqlite3.Connection, decisions_path: Path = DEFAULT_DECI
     decisions = json.loads(decisions_path.read_text(encoding="utf-8"))
     for decision in decisions:
         status = decision.get("status", "draft")
+        selected_option = decision.get("selected_option")
+        rationale = decision.get("rationale")
         decided_by = decision.get("decided_by")
         decided_at = decision.get("decided_at")
-        if status in FINAL_DECISION_STATUSES and (not decided_by or not decided_at):
-            raise ValueError(f"final decision {decision['id']} requires decided_by and decided_at")
+        if status == "accepted" and not all((selected_option, rationale, decided_by, decided_at)):
+            raise ValueError(f"accepted decision {decision['id']} requires selected_option, rationale, decided_by, and decided_at")
+        if status == "rejected" and not all((rationale, decided_by, decided_at)):
+            raise ValueError(f"rejected decision {decision['id']} requires rationale, decided_by, and decided_at")
         current = conn.execute(
             "SELECT status FROM decisions WHERE id = ?",
             (decision["id"],),
@@ -175,8 +179,8 @@ def load_decisions(conn: sqlite3.Connection, decisions_path: Path = DEFAULT_DECI
             (
                 decision["id"],
                 decision["question"],
-                decision.get("selected_option"),
-                decision.get("rationale"),
+                selected_option,
+                rationale,
                 status,
                 decided_by,
                 decided_at,

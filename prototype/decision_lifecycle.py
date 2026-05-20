@@ -27,6 +27,10 @@ def utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def has_text(value: str | None) -> bool:
+    return bool(value and value.strip())
+
+
 def get_decision(conn: sqlite3.Connection, decision_id: str) -> sqlite3.Row:
     row = conn.execute("SELECT * FROM decisions WHERE id = ?", (decision_id,)).fetchone()
     if row is None:
@@ -72,12 +76,12 @@ def update_decision(
     current = get_decision(conn, decision_id)
     validate_selected_option(conn, decision_id, selected_option)
 
-    if status == "accepted" and not selected_option:
+    if status == "accepted" and not has_text(selected_option):
         raise ValueError("accepted decisions require --selected-option")
     if status in FINAL_STATUSES:
-        if not decided_by:
+        if not has_text(decided_by):
             raise ValueError(f"{status} decisions require --decided-by")
-        if not rationale:
+        if not has_text(rationale):
             raise ValueError(f"{status} decisions require --rationale")
         decided_at = decided_at or utc_now()
     else:

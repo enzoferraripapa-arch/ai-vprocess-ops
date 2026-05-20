@@ -35,9 +35,14 @@ explained_by
 references_standard
 uses_sop
 exported_to_alm
+included_in_alm_handoff
 supersedes
 conflicts_with
 ```
+
+`exported_to_alm` is not used by the public prototype. It should only be used
+by a project-specific formal adapter after an external ALM write has actually
+been confirmed. The public prototype uses pre-formal handoff records instead.
 
 ## Activity Decision Pattern
 
@@ -77,3 +82,19 @@ draft -> needs_review -> rejected
 An accepted graph decision means a named human reviewer recorded a rationale and
 timestamp in the local engineering-memory DB. It does not mean formal ALM
 approval, signature completion, baseline creation, or compliance closure.
+
+## Trace Review Boundary
+
+Trace edges can also receive local review state. The flow below is conceptual;
+the current CLI records the requested state and does not enforce transition
+order.
+
+```text
+needs_review -> accepted
+needs_review -> rejected
+```
+
+Only accepted trace reviews with reviewer, timestamp, and rationale should be
+included in one-way ALM handoff packages. The exported package is still
+pre-formal: it is not an API write, approval, signature, baseline, or audit
+record.

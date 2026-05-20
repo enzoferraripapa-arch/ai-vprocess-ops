@@ -13,10 +13,12 @@ flowchart LR
     policy["Policy matcher<br/>single and AND conditions"]
     impact["Recursive impact query<br/>SQLite CTE paths"]
     decision["Decision lifecycle CLI<br/>accept, reject, mark review-needed"]
+    handoff["One-way ALM handoff export<br/>accepted records only"]
     prompt["LLM review context<br/>bounded prompt or local Ollama"]
     report["Markdown review report<br/>deterministic export"]
     tools["Read-only JSON-RPC tool stub<br/>graph context, impact paths, report text"]
     human["Human engineering review"]
+    entry["Human-controlled ALM entry/import"]
     alm["Formal ALM / SOP system<br/>baselines, signatures, approvals"]
     queue["Optional execution queue<br/>ready, blocked, claimed, done"]
 
@@ -25,6 +27,7 @@ flowchart LR
     graph --> policy
     graph --> impact
     graph --> decision
+    graph --> handoff
     graph --> prompt
     graph --> report
     graph --> tools
@@ -32,10 +35,13 @@ flowchart LR
     impact --> human
     decision --> human
     human --> decision
+    human --> handoff
     prompt --> human
     report --> human
     tools --> human
-    human --> alm
+    handoff --> entry
+    human --> entry
+    entry --> alm
     queue -. execution state only .-> importer
     queue -. does not own engineering facts .-> graph
 ```
@@ -47,7 +53,7 @@ flowchart LR
 | Target project | Authorized source artifacts, tests, logs, documents, configuration | AI-generated engineering conclusions |
 | Importer/scanner | Project-specific extraction and mapping into graph records | Formal approval or compliance claims |
 | SQLite graph | Requirements, decisions, evidence, trace candidates, open issues, policy inputs | Final ALM workflow state |
-| Policy, impact, and decision lifecycle tools | Candidate recommendations, candidate impact paths, and local human review records | Formal approval, signatures, or baselines |
+| Policy, impact, decision lifecycle, and handoff export tools | Candidate recommendations, candidate impact paths, local human review records, one-way handoff packages | Formal approval, signatures, or baselines |
 | LLM prompt/report | Review assistance, questions, summaries, next-action drafts | Authority, signatures, baselines |
 | Formal ALM/SOP system | Approved work items, baselines, workflow state, signatures, audit records | Unreviewed inferred candidates |
 
@@ -83,6 +89,22 @@ python prototype/decision_lifecycle.py \
 python prototype/export_review_report.py \
   --db .demo/vprocess_demo.db \
   --output .demo/review_report.md
+
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  trace-review \
+  --source CR-001 \
+  --target REQ-001 \
+  --edge-type impacts \
+  --status accepted \
+  --reviewed-by reviewer \
+  --rationale "Impact link to REQ-001 was reviewed."
+
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  export \
+  --format markdown \
+  --output .demo/alm_handoff.md
 
 python prototype/mcp_readonly_stub.py \
   --db .demo/vprocess_demo.db \

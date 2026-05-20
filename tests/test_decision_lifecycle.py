@@ -116,7 +116,7 @@ class DecisionLifecycleTests(unittest.TestCase):
         seed_path = Path(temp_dir.name) / "bad_decisions.json"
         seed_path.write_text(json.dumps(bad_seed), encoding="utf-8", newline="\n")
 
-        with self.assertRaisesRegex(ValueError, "requires decided_by and decided_at"):
+        with self.assertRaisesRegex(ValueError, "requires selected_option, rationale, decided_by, and decided_at"):
             vprocess_graph.load_decisions(conn, seed_path)
 
     def test_rejects_unknown_option_when_decision_options_are_defined(self) -> None:

@@ -98,12 +98,47 @@ def main() -> int:
                 str(report_path),
             ]
         )
+        handoff_output = run_command(
+            [
+                "prototype/alm_handoff_export.py",
+                "--db",
+                str(db_path),
+                "trace-review",
+                "--source",
+                "CR-001",
+                "--target",
+                "REQ-001",
+                "--edge-type",
+                "impacts",
+                "--status",
+                "accepted",
+                "--reviewed-by",
+                "sample-reviewer",
+                "--rationale",
+                "Sample trace review accepted the impact link to REQ-001.",
+                "--reviewed-at",
+                "2026-01-02T03:04:05Z",
+            ]
+        )
+        if "accepted" not in handoff_output:
+            raise RuntimeError("trace review command did not record an accepted review")
+        handoff_markdown = run_command(
+            [
+                "prototype/alm_handoff_export.py",
+                "--db",
+                str(db_path),
+                "export",
+                "--format",
+                "markdown",
+            ]
+        )
         report_output = report_path.read_text(encoding="utf-8")
         regression_output = run_command(["benchmarks/run_sample_regression.py"])
 
     diffs: list[str] = []
     diffs.extend(compare("sample_impact_query.md", ROOT / "examples/outputs/sample_impact_query.md", impact_output))
     diffs.extend(compare("sample_review_report.md", ROOT / "examples/outputs/sample_review_report.md", report_output))
+    diffs.extend(compare("sample_alm_handoff.md", ROOT / "examples/outputs/sample_alm_handoff.md", handoff_markdown))
     diffs.extend(compare("sample_result.md", ROOT / "benchmarks/sample_result.md", regression_output))
 
     if diffs:

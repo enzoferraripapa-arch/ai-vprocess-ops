@@ -33,6 +33,10 @@ decision_lifecycle = load_module(
     ROOT / "prototype" / "decision_lifecycle.py",
     "regression_decision_lifecycle",
 )
+alm_handoff_export = load_module(
+    ROOT / "prototype" / "alm_handoff_export.py",
+    "regression_alm_handoff_export",
+)
 export_review_report = load_module(
     ROOT / "prototype" / "export_review_report.py",
     "regression_export_review_report",
@@ -78,7 +82,8 @@ def render_result(metrics: dict, report: str, impact_paths: list[dict]) -> str:
     impacted_nodes = {row["node_id"] for row in impact_paths}
     impact_path_present = {"REQ-001", "REQ-002", "STD-SW-TRACE-01"}.issubset(impacted_nodes)
     decision_review_present = "DEC-001" in metrics["reviewed_decisions"]
-    passed = passed and boundary_present and impact_path_present and decision_review_present
+    handoff_trace_present = ("CR-001", "REQ-001", "impacts") in metrics["handoff_trace_candidates"]
+    passed = passed and boundary_present and impact_path_present and decision_review_present and handoff_trace_present
     lines = [
         "# Sample Regression Check Result",
         "",
@@ -97,6 +102,7 @@ def render_result(metrics: dict, report: str, impact_paths: list[dict]) -> str:
         f"| Trace edges in report context | `{metrics['trace_edge_count']}` |",
         f"| Recursive impact path reaches requirements/standards | `{'yes' if impact_path_present else 'no'}` |",
         f"| Human decision review recorded | `{'yes' if decision_review_present else 'no'}` |",
+        f"| One-way handoff includes reviewed trace | `{'yes' if handoff_trace_present else 'no'}` |",
         f"| Export boundary present | `{'yes' if boundary_present else 'no'}` |",
         "",
         "Interpretation: this regression check only verifies the deterministic sample output. It does not prove compliance,",
@@ -121,9 +127,24 @@ def run_regression_check() -> str:
                     rationale="Sample regression records local review state without claiming formal approval.",
                     decided_at="2026-01-02T03:04:05Z",
                 )
+                alm_handoff_export.record_trace_review(
+                    conn,
+                    source_id="CR-001",
+                    target_id="REQ-001",
+                    edge_type="impacts",
+                    status="accepted",
+                    reviewed_by="sample-regression",
+                    rationale="Sample regression records local trace review state.",
+                    reviewed_at="2026-01-02T03:04:05Z",
+                )
             context = llm_recommend.collect_context(conn)
             report = export_review_report.render_report(context)
             metrics = evaluate_context(context)
+            handoff = alm_handoff_export.collect_handoff(conn)
+            metrics["handoff_trace_candidates"] = {
+                (trace["source_id"], trace["target_id"], trace["edge_type"])
+                for trace in handoff["reviewed_trace_candidates"]
+            }
             impact_paths = impact_query.query_impact_paths(conn, "CR-001", max_depth=2)
         finally:
             conn.close()

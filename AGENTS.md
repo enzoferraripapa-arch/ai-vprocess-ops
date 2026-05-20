@@ -30,7 +30,8 @@ Before changing or extending the project, read these files in order:
 6. `examples/sample_trace_graph.json`
 7. `prototype/vprocess_graph.py`
 8. `prototype/decision_lifecycle.py`
-9. `docs/12_architecture.md`
+9. `prototype/alm_handoff_export.py`
+10. `docs/12_architecture.md`
 
 Use `docs/10_ai_agent_build_spec.md` when a user wants an AI coding agent to
 build a project-specific scanner, graph importer, reverse-engineering pipeline,
@@ -58,6 +59,8 @@ When asked to use or extend this repository, preserve this operating model:
   formally promoted.
 - Record accepted or rejected decisions with reviewer, rationale, and timestamp;
   do not treat those records as formal ALM approval.
+- Export ALM handoff packages only from accepted local review records; do not
+  write to the formal ALM system from this public prototype.
 - Treat V-process activity recommendations as decision support, not approval.
 - Keep formal ALM systems authoritative for baselines, workflow state,
   signatures, approvals, and audit records.
@@ -141,9 +144,23 @@ python prototype/decision_lifecycle.py \
   --selected-option bounded_delta_v_process \
   --decided-by local-reviewer \
   --rationale "Local review accepted the bounded delta path."
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  trace-review \
+  --source CR-001 \
+  --target REQ-001 \
+  --edge-type impacts \
+  --status accepted \
+  --reviewed-by local-reviewer \
+  --rationale "Local review accepted the impact link to REQ-001."
 python prototype/export_review_report.py \
   --db .demo/vprocess_demo.db \
   --output .demo/review_report.md
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  export \
+  --format markdown \
+  --output .demo/alm_handoff.md
 python prototype/mcp_readonly_stub.py \
   --db .demo/vprocess_demo.db \
   --list-tools

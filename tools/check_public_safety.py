@@ -171,6 +171,7 @@ def check_sql_schema() -> list[Finding]:
         "nodes",
         "policy_conditions",
         "run_log",
+        "trace_reviews",
     }
     missing = expected - tables
     if missing:

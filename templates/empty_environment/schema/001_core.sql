@@ -44,10 +44,23 @@ CREATE TABLE IF NOT EXISTS decisions (
     question TEXT NOT NULL,
     selected_option TEXT,
     rationale TEXT,
-    status TEXT NOT NULL DEFAULT 'draft',
+    status TEXT NOT NULL DEFAULT 'draft'
+        CHECK (status IN ('draft', 'needs_review', 'accepted', 'rejected')),
     decided_by TEXT,
     decided_at TEXT,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CHECK (
+        status NOT IN ('accepted', 'rejected')
+        OR (
+            length(trim(coalesce(rationale, ''))) > 0
+            AND length(trim(coalesce(decided_by, ''))) > 0
+            AND length(trim(coalesce(decided_at, ''))) > 0
+        )
+    ),
+    CHECK (
+        status != 'accepted'
+        OR length(trim(coalesce(selected_option, ''))) > 0
+    )
 );
 
 CREATE TABLE IF NOT EXISTS decision_options (
@@ -58,6 +71,29 @@ CREATE TABLE IF NOT EXISTS decision_options (
     cons TEXT,
     PRIMARY KEY (decision_id, option_key),
     FOREIGN KEY (decision_id) REFERENCES decisions(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS trace_reviews (
+    source_id TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    edge_type TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'needs_review'
+        CHECK (status IN ('accepted', 'rejected', 'needs_review')),
+    reviewed_by TEXT,
+    reviewed_at TEXT,
+    rationale TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (source_id, target_id, edge_type),
+    FOREIGN KEY (source_id, target_id, edge_type) REFERENCES edges(source_id, target_id, edge_type) ON DELETE CASCADE,
+    CHECK (
+        status = 'needs_review'
+        OR (
+            length(trim(coalesce(reviewed_by, ''))) > 0
+            AND length(trim(coalesce(reviewed_at, ''))) > 0
+            AND length(trim(coalesce(rationale, ''))) > 0
+        )
+    )
 );
 
 CREATE TABLE IF NOT EXISTS activity_policies (
@@ -119,3 +155,4 @@ CREATE INDEX IF NOT EXISTS idx_edges_target ON edges(target_id);
 CREATE INDEX IF NOT EXISTS idx_edges_type ON edges(edge_type);
 CREATE INDEX IF NOT EXISTS idx_external_refs_node ON external_refs(node_id);
 CREATE INDEX IF NOT EXISTS idx_policy_conditions_policy ON policy_conditions(policy_id);
+CREATE INDEX IF NOT EXISTS idx_trace_reviews_status ON trace_reviews(status);

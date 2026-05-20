@@ -45,6 +45,9 @@ jobs:
           python prototype/decision_lifecycle.py --db .demo/vprocess_demo.db list
           python prototype/decision_lifecycle.py --db .demo/vprocess_demo.db decide --id DEC-001 --status accepted --selected-option bounded_delta_v_process --decided-by ci-reviewer --rationale "Sample CI review accepted the bounded delta path." --decided-at 2026-01-02T03:04:05Z
           python prototype/export_review_report.py --db .demo/vprocess_demo.db --output .demo/review_report.md
+          python prototype/alm_handoff_export.py --db .demo/vprocess_demo.db trace-review --source CR-001 --target REQ-001 --edge-type impacts --status accepted --reviewed-by ci-reviewer --rationale "Sample CI trace review accepted the impact link to REQ-001." --reviewed-at 2026-01-02T03:04:05Z
+          python prototype/alm_handoff_export.py --db .demo/vprocess_demo.db export --format markdown --output .demo/alm_handoff.md
+          python prototype/alm_handoff_export.py --db .demo/vprocess_demo.db export --format json --output .demo/alm_handoff.json
           python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --list-tools
           python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --call impact_paths --arguments '{"start":"CR-001","max_depth":2}'
           printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"review_report","arguments":{}}}' | python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --serve

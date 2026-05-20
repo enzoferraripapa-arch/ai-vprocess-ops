@@ -98,6 +98,7 @@ The current prototype is small, but it is executable end to end:
 | Call a local Ollama model with the same context | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider ollama --model llama3.1` |
 | Record human decision lifecycle state | `python prototype/decision_lifecycle.py --db .demo/vprocess_demo.db decide --id DEC-001 --status accepted --selected-option bounded_delta_v_process --decided-by reviewer --rationale "Impact review accepted the bounded delta path."` |
 | Export a deterministic Markdown review report | `python prototype/export_review_report.py --db .demo/vprocess_demo.db --output .demo/review_report.md` |
+| Export a one-way ALM handoff package from accepted records only | `python prototype/alm_handoff_export.py --db .demo/vprocess_demo.db export --format markdown` |
 | Expose read-only JSON-RPC-style graph tools | `python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --list-tools` |
 | Run the fictional sample regression check | `python benchmarks/run_sample_regression.py` |
 
@@ -105,12 +106,14 @@ The sample regression check currently passes when the graph selects the expected
 impact analysis, trace review, regression-selection, and approval-gate
 activities; keeps the blocking open issue visible; reaches impacted
 requirements and standards through recursive paths; records human decision
-review state; and preserves the export boundary.
+review state; verifies a reviewed trace handoff example; and preserves the
+export boundary.
 
 Committed sample outputs:
 
 - [examples/outputs/sample_impact_query.md](examples/outputs/sample_impact_query.md)
 - [examples/outputs/sample_review_report.md](examples/outputs/sample_review_report.md)
+- [examples/outputs/sample_alm_handoff.md](examples/outputs/sample_alm_handoff.md)
 - [benchmarks/sample_result.md](benchmarks/sample_result.md)
 
 Current limits: this is not a production trace engine, complete MCP server,
@@ -330,6 +333,26 @@ python prototype/decision_lifecycle.py \
   --rationale "Impact review accepted the bounded delta path."
 ```
 
+Record a reviewed trace candidate and export a one-way ALM handoff package:
+
+```bash
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  trace-review \
+  --source CR-001 \
+  --target REQ-001 \
+  --edge-type impacts \
+  --status accepted \
+  --reviewed-by reviewer \
+  --rationale "Impact link to REQ-001 was reviewed."
+
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  export \
+  --format markdown \
+  --output .demo/alm_handoff.md
+```
+
 Import the authorized reverse-engineering sample:
 
 ```bash
@@ -448,9 +471,23 @@ python prototype/decision_lifecycle.py \
   --selected-option bounded_delta_v_process \
   --decided-by local-reviewer \
   --rationale "Local review accepted the bounded delta path."
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  trace-review \
+  --source CR-001 \
+  --target REQ-001 \
+  --edge-type impacts \
+  --status accepted \
+  --reviewed-by local-reviewer \
+  --rationale "Local review accepted the impact link to REQ-001."
 python prototype/export_review_report.py \
   --db .demo/vprocess_demo.db \
   --output .demo/review_report.md
+python prototype/alm_handoff_export.py \
+  --db .demo/vprocess_demo.db \
+  export \
+  --format markdown \
+  --output .demo/alm_handoff.md
 python prototype/mcp_readonly_stub.py \
   --db .demo/vprocess_demo.db \
   --list-tools
