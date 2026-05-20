@@ -98,9 +98,9 @@ The current prototype is small, but it is executable end to end:
 | Call a local Ollama model with the same context | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider ollama --model llama3.1` |
 | Export a deterministic Markdown review report | `python prototype/export_review_report.py --db .demo/vprocess_demo.db --output .demo/review_report.md` |
 | Expose read-only JSON-RPC-style graph tools | `python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --list-tools` |
-| Run the fictional sample benchmark | `python benchmarks/run_sample_benchmark.py` |
+| Run the fictional sample regression check | `python benchmarks/run_sample_regression.py` |
 
-The sample benchmark currently passes when the graph selects the expected
+The sample regression check currently passes when the graph selects the expected
 impact analysis, trace review, regression-selection, and approval-gate
 activities; keeps the blocking open issue visible; reaches impacted
 requirements and standards through recursive paths; and preserves the export
@@ -256,7 +256,8 @@ tools/
   Public safety checks for secrets, internal markers, JSON, Python, schema, and workflows.
 
 benchmarks/
-  Templates for measuring output quality and cost reduction.
+  Regression and evaluation scripts. The committed sample result is a
+  deterministic regression check, not a cost or correctness benchmark.
 
 templates/empty_environment/
   Copyable per-project workspace for local engineering-memory runs.
@@ -350,10 +351,10 @@ python prototype/mcp_readonly_stub.py \
   --list-tools
 ```
 
-Run the sample benchmark:
+Run the sample regression check:
 
 ```bash
-python benchmarks/run_sample_benchmark.py
+python benchmarks/run_sample_regression.py
 ```
 
 ## Quality And Safety Gates
@@ -424,7 +425,7 @@ python prototype/export_review_report.py \
 python prototype/mcp_readonly_stub.py \
   --db .demo/vprocess_demo.db \
   --list-tools
-python benchmarks/run_sample_benchmark.py
+python benchmarks/run_sample_regression.py
 ```
 
 The goal is not to claim that automation proves engineering quality. The goal

@@ -133,7 +133,7 @@ python prototype/export_review_report.py \
 python prototype/mcp_readonly_stub.py \
   --db .demo/vprocess_demo.db \
   --list-tools
-python benchmarks/run_sample_benchmark.py
+python benchmarks/run_sample_regression.py
 ```
 
 Remove `.demo/`, `.ruff_cache/`, and `__pycache__/` directories after local

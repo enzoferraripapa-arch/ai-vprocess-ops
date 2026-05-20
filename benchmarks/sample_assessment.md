@@ -20,13 +20,13 @@ bounded delta process.
 
 ## Pass Criteria
 
-The method passes the first benchmark if it identifies the three mandatory
-activities, links them to project facts, and produces reviewable rationale.
+The sample regression check passes if it identifies the mandatory activities,
+links them to project facts, and produces reviewable rationale.
 
 Run:
 
 ```bash
-python benchmarks/run_sample_benchmark.py
+python benchmarks/run_sample_regression.py
 ```
 
 Current deterministic sample result:

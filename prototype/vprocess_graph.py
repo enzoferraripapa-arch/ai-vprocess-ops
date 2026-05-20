@@ -13,6 +13,8 @@ import json
 import sqlite3
 from pathlib import Path
 
+import policy_match
+
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "schema" / "001_core.sql"
 DEFAULT_TRACE = ROOT / "examples" / "sample_trace_graph.json"
@@ -229,45 +231,9 @@ def seed_activity_policies(conn: sqlite3.Connection) -> None:
         upsert_activity_policy(conn, policy_id, activity_id, conditions, recommendation, rationale, severity)
 
 
-def conditions_for_policy(conn: sqlite3.Connection, policy_id: str) -> list[tuple[str, str]]:
-    return [
-        (row["condition_key"], row["condition_value"])
-        for row in conn.execute(
-            """
-            SELECT condition_key, condition_value
-            FROM policy_conditions
-            WHERE policy_id = ?
-            ORDER BY condition_key, condition_value
-            """,
-            (policy_id,),
-        )
-    ]
-
-
-def policy_matches_profile(conditions: list[tuple[str, str]], profile: dict) -> bool:
-    return all(str(profile.get(key)) == value for key, value in conditions)
-
-
 def recommend_activities(conn: sqlite3.Connection, project_data: dict) -> list[dict]:
     profile = project_data["project_profile"]
-    matches: list[dict] = []
-    rows = conn.execute(
-        """
-        SELECT p.*, n.title AS activity_title
-        FROM activity_policies p
-        JOIN nodes n ON n.id = p.activity_id
-        ORDER BY CASE p.severity WHEN 'high' THEN 0 ELSE 1 END, p.id
-        """
-    ).fetchall()
-    for row in rows:
-        conditions = conditions_for_policy(conn, row["id"])
-        if not policy_matches_profile(conditions, profile):
-            continue
-        result = dict(row)
-        result["conditions"] = [{"key": key, "value": value} for key, value in conditions]
-        result["conditions_summary"] = " AND ".join(f"{key}={value}" for key, value in conditions)
-        matches.append(result)
-    return matches
+    return policy_match.matching_activity_policies(conn, profile)
 
 
 def print_context(conn: sqlite3.Connection, recommendations: list[dict]) -> None:

@@ -15,6 +15,8 @@ import sqlite3
 from pathlib import Path
 from urllib.parse import urlparse
 
+import policy_match
+
 EDGE_TYPES_FOR_REVIEW = (
     "requires_activity",
     "references_standard",
@@ -88,45 +90,15 @@ def fetch_project_profiles(conn: sqlite3.Connection) -> list[dict]:
 def fetch_activity_matches(conn: sqlite3.Connection, profiles: list[dict]) -> list[dict]:
     matches: list[dict] = []
     seen: set[str] = set()
-    rows = conn.execute(
-        """
-        SELECT
-            p.id,
-            p.activity_id,
-            n.title AS activity_title,
-            p.recommendation,
-            p.rationale,
-            p.severity
-        FROM activity_policies p
-        JOIN nodes n ON n.id = p.activity_id
-        ORDER BY CASE p.severity WHEN 'high' THEN 0 ELSE 1 END, p.id
-        """
-    ).fetchall()
+    policies = policy_match.load_activity_policies(conn)
     for profile in profiles:
-        for row in rows:
-            conditions = [
-                {"key": condition["condition_key"], "value": condition["condition_value"]}
-                for condition in conn.execute(
-                    """
-                    SELECT condition_key, condition_value
-                    FROM policy_conditions
-                    WHERE policy_id = ?
-                    ORDER BY condition_key, condition_value
-                    """,
-                    (row["id"],),
-                )
-            ]
-            if not all(str(profile.get(condition["key"])) == condition["value"] for condition in conditions):
+        for policy in policies:
+            if not policy_match.policy_matches_profile(policy["conditions"], profile):
                 continue
-            if row["id"] in seen:
+            if policy["id"] in seen:
                 continue
-            seen.add(row["id"])
-            result = dict(row)
-            result["conditions"] = conditions
-            result["conditions_summary"] = " AND ".join(
-                f"{condition['key']}={condition['value']}" for condition in conditions
-            )
-            matches.append(result)
+            seen.add(policy["id"])
+            matches.append(policy)
     return matches
 
 

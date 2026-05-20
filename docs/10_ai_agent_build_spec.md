@@ -61,9 +61,10 @@ prototype/mcp_readonly_stub.py
   recursive impact paths, and deterministic report text. It is useful for local
   integration experiments, but it is not a complete MCP server.
 
-benchmarks/run_sample_benchmark.py
-  Runs the fictional sample scenario and checks that the expected activities,
-  open issue, trace context, and export boundary are present.
+benchmarks/run_sample_regression.py
+  Runs the fictional sample scenario as a deterministic regression check. It
+  verifies that the expected activities, open issue, trace context, and export
+  boundary are present. It is not a real quality or cost benchmark.
 ```
 
 The demo is deliberately small. It proves the read path from graph DB to LLM

@@ -79,12 +79,12 @@ def main() -> int:
             ]
         )
         report_output = report_path.read_text(encoding="utf-8")
-        benchmark_output = run_command(["benchmarks/run_sample_benchmark.py"])
+        regression_output = run_command(["benchmarks/run_sample_regression.py"])
 
     diffs: list[str] = []
     diffs.extend(compare("sample_impact_query.md", ROOT / "examples/outputs/sample_impact_query.md", impact_output))
     diffs.extend(compare("sample_review_report.md", ROOT / "examples/outputs/sample_review_report.md", report_output))
-    diffs.extend(compare("sample_result.md", ROOT / "benchmarks/sample_result.md", benchmark_output))
+    diffs.extend(compare("sample_result.md", ROOT / "benchmarks/sample_result.md", regression_output))
 
     if diffs:
         print("Sample output check failed. Regenerate or update the committed samples:")

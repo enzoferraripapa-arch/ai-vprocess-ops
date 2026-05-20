@@ -46,7 +46,7 @@ jobs:
           python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --list-tools
           python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --call impact_paths --arguments '{"start":"CR-001","max_depth":2}'
           printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"review_report","arguments":{}}}' | python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --serve
-          python benchmarks/run_sample_benchmark.py
+          python benchmarks/run_sample_regression.py
           python tools/check_sample_outputs.py
 
   quality:

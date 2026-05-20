@@ -24,6 +24,7 @@ vprocess_graph = load_module(ROOT / "prototype" / "vprocess_graph.py", "vprocess
 llm_recommend = load_module(ROOT / "prototype" / "llm_recommend.py", "llm_recommend_for_export_test")
 export_review_report = load_module(ROOT / "prototype" / "export_review_report.py", "export_review_report")
 run_sample_benchmark = load_module(ROOT / "benchmarks" / "run_sample_benchmark.py", "run_sample_benchmark")
+run_sample_regression = load_module(ROOT / "benchmarks" / "run_sample_regression.py", "run_sample_regression")
 
 
 class ExportAndBenchmarkTests(unittest.TestCase):
@@ -51,12 +52,17 @@ class ExportAndBenchmarkTests(unittest.TestCase):
         self.assertIn("ACT-IMPACT", report)
         self.assertIn("Do not export candidate trace links as approved links", report)
 
-    def test_sample_benchmark_passes_expected_scenario(self) -> None:
-        result = run_sample_benchmark.run_benchmark()
+    def test_sample_regression_check_passes_expected_scenario(self) -> None:
+        result = run_sample_regression.run_regression_check()
 
         self.assertIn("Result: PASS", result)
         self.assertIn("ACT-IMPACT", result)
         self.assertIn("Export boundary present | `yes`", result)
+
+    def test_legacy_benchmark_wrapper_still_runs(self) -> None:
+        result = run_sample_benchmark.run_benchmark()
+
+        self.assertIn("Sample Regression Check Result", result)
 
 
 if __name__ == "__main__":

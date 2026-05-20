@@ -52,6 +52,26 @@ class VProcessGraphTests(unittest.TestCase):
 
         self.assertNotIn("ACT-GATE", activity_ids)
 
+    def test_policy_matching_normalizes_bool_and_integer_values(self) -> None:
+        conn, project_data = self.build_demo_graph()
+
+        vprocess_graph.upsert_node(conn, "ACT-NORMALIZE", "Activity", "Normalization check", status="candidate")
+        vprocess_graph.upsert_activity_policy(
+            conn,
+            "POL-NORMALIZE",
+            "ACT-NORMALIZE",
+            [("requires_review", "true"), ("safety_level", "1")],
+            "Run normalization check.",
+            "Boolean and integer profile values should match explicit policy strings.",
+        )
+        project_data["project_profile"]["requires_review"] = True
+        project_data["project_profile"]["safety_level"] = 1
+
+        recommendations = vprocess_graph.recommend_activities(conn, project_data)
+        activity_ids = {row["activity_id"] for row in recommendations}
+
+        self.assertIn("ACT-NORMALIZE", activity_ids)
+
     def test_keeps_open_issue_and_blocking_trace(self) -> None:
         conn, _project_data = self.build_demo_graph()
 

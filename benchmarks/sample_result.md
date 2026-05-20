@@ -1,4 +1,4 @@
-# Sample Benchmark Result
+# Sample Regression Check Result
 
 Scenario: fictional behavior-changing timeout update in a high-risk embedded controller.
 
@@ -16,5 +16,5 @@ Result: PASS
 | Recursive impact path reaches requirements/standards | `yes` |
 | Export boundary present | `yes` |
 
-Interpretation: this benchmark only checks the deterministic sample output. It does not prove compliance,
+Interpretation: this regression check only verifies the deterministic sample output. It does not prove compliance,
 production readiness, or general performance on real projects.
