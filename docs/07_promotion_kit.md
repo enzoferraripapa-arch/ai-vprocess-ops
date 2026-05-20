@@ -10,6 +10,26 @@ https://github.com/enzoferraripapa-arch/ai-vprocess-ops
 
 AI coding needs engineering memory, not just better autocomplete.
 
+## Discovery Keywords
+
+Use these naturally in posts and README text. Do not stuff them mechanically.
+
+```text
+AI coding agents
+engineering memory
+agent memory
+context engineering
+Claude Code
+Codex
+Cursor
+requirements traceability
+V-process
+ALM handoff
+evidence graph
+decision traceability
+vibe coding
+```
+
 ## High-Context One-Liner
 
 Not another prompt template: a graph-backed build spec for AI agents that need
@@ -77,6 +97,50 @@ history.
 
 https://github.com/enzoferraripapa-arch/ai-vprocess-ops
 
+## Launch Order
+
+Use a small sequence instead of posting everywhere at once.
+
+1. GitHub release or pinned repository note: explain what the repo is and who
+   should use it.
+2. `r/ClaudeCode` or a Claude Code community: lead with cross-session context
+   loss and the copyable empty environment.
+3. `r/AI_Agents` or local-first agent-memory communities: lead with the
+   boundary between task queue, graph DB, and formal authority.
+4. Hacker News `Show HN`: lead with the small auditable prototype and ask for
+   feedback from people building agent-memory and developer-tooling systems.
+5. One direct reply/comment in a relevant thread about Beads, MCP memory,
+   context engineering, requirements-as-code, or traceability. Do not spam
+   unrelated threads.
+
+## GitHub Release Note
+
+Title:
+
+```text
+v0.2.0: Copyable engineering-memory environment for AI coding agents
+```
+
+Body:
+
+```text
+This release turns ai-vprocess-ops from a reference repo into a copyable starter
+workspace for AI-assisted engineering memory.
+
+Highlights:
+
+- templates/empty_environment: per-project starter environment
+- local SQLite graph DB bootstrap
+- project profile for target-project boundaries
+- first-request prompt for Codex, Claude Code, Cursor, or other coding agents
+- optional Beads/task-queue boundary
+- clearer distinction between execution queue, graph DB, and formal ALM/SOP authority
+
+The goal is not automatic compliance. The goal is to preserve requirements,
+decisions, evidence, trace candidates, tests, and open issues before they
+disappear into chat history.
+```
+
 ## Hacker News / Reddit Style Post
 
 Title:
@@ -102,6 +166,70 @@ reverse-engineering reports, and human review gates.
 
 The LLM is not the source of truth. The graph is the durable engineering memory.
 Humans and formal tools keep final authority.
+
+Repo:
+https://github.com/enzoferraripapa-arch/ai-vprocess-ops
+```
+
+## Claude Code / Codex Community Post
+
+Title:
+
+```text
+I made a copyable engineering-memory template for AI coding agents
+```
+
+Body:
+
+```text
+I published a small repo for a problem I keep hitting with AI coding agents:
+the agent can build fast, but the engineering reason behind the work disappears
+across sessions.
+
+This is not another prompt template and not model training.
+
+The repo defines a lightweight graph-backed engineering-memory pattern. The new
+empty-environment template can be copied beside a target project and initialized
+with a local SQLite graph DB. Then Codex, Claude Code, Cursor, or another agent
+can build project-specific importers and reports around it.
+
+The split is deliberate:
+
+- task queue: ready / blocked / claimed / done work
+- graph DB: requirements, decisions, evidence, trace candidates, open issues
+- formal ALM/SOP system: approvals, baselines, signatures, audit records
+
+Repo:
+https://github.com/enzoferraripapa-arch/ai-vprocess-ops
+
+I am interested in feedback from people using agents on long-running projects,
+especially where context loss, traceability, or review preparation becomes the
+actual bottleneck.
+```
+
+## AI Agents / Context Engineering Post
+
+Title:
+
+```text
+Engineering memory layer for AI agents: task queue != source of truth
+```
+
+Body:
+
+```text
+I published a small local-first reference repo around engineering memory for AI
+agents.
+
+The main idea: an execution queue is good for work state, but it should not be
+the source of engineering facts. Requirements, decisions, evidence, tests,
+trace candidates, open issues, and rationale need a durable structure that can
+be reviewed by humans and later promoted into formal systems.
+
+This repo uses a lightweight SQLite graph model and a copyable empty
+environment that an AI coding agent can turn into a project-specific pipeline.
+It is intentionally pre-ALM: the LLM is not authority, and formal tools keep
+approval/baseline/signature state.
 
 Repo:
 https://github.com/enzoferraripapa-arch/ai-vprocess-ops

@@ -15,6 +15,7 @@ This project explores engineering memory for AI-assisted V-process decisions.
 | Agent memory | [MemoryGraph](https://github.com/memory-graph/memory-graph), [Memento MCP](https://github.com/lfrmonteiro99/memento-mcp), [Engram](https://github.com/tstockham96/engram) | Persistent memory for coding agents, often through MCP, typed memories, graph recall, or cross-session context | Very close in memory architecture, but usually broader than engineering process control |
 | Requirements as context | [ContextGit](https://github.com/Mohamedsaleh14/ContextGit), [RTMX](https://github.com/rtmx-ai/rtmx), [Reqvire](https://github.com/reqvire-org/reqvire) | Requirements traceability, requirements-as-code, AI-readable project intent, tests, and status | Very close in traceability intent; this project adds V-process activity selection and SOP/standard/open-issue context |
 | Code context graphs | [Code Context Graph / narsil-mcp](https://github.com/postrv/narsil-mcp) | Machine-readable code intelligence: call graphs, symbols, security findings, dependency intelligence, and local code context | Complementary; code context graphs can become one input to the V-process decision graph |
+| Execution queues | [Beads](https://steveyegge.github.io/beads/) and similar agent-first task trackers | Ready, blocked, claimed, and completed work for long-running coding agents | Complementary; the queue carries execution state, while this project's graph preserves engineering meaning and rationale |
 | AI-augmented V-model | [Agile V](https://agile-v.org/) and the related [paper](https://arxiv.org/abs/2602.20684) | AI agents across requirements, design, build, test, compliance, and human approval gates | Closest at the lifecycle level; this repository is a smaller, local-first reference architecture rather than a full framework |
 | GraphRAG and context engineering | Knowledge graph / GraphRAG projects and MCP-based context layers | Turning fragmented project knowledge into queryable graph context for agents | Shares the graph-context idea, but uses explicit engineering artifacts and decision boundaries |
 
@@ -55,6 +56,9 @@ Requirements-as-context:
 
 Code context graph:
   Helps AI tools understand the actual codebase structure and blast radius.
+
+Execution queue:
+  Helps agents know what work is ready, blocked, claimed, or done.
 
 AI-native V-process operations:
   Helps engineers decide what process activity, trace review, test selection,

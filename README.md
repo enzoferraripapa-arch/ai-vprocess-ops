@@ -9,6 +9,11 @@ This project is a public, sanitized reference architecture for using modern AI
 to support V-process operation without training a custom model and without
 replacing formal ALM systems.
 
+Use it with Codex, Claude Code, Cursor, GitHub Copilot, or another AI coding
+agent when the real problem is not code generation speed, but loss of
+engineering context: requirements, traceability, decisions, evidence, tests,
+open issues, and ALM handoff reasoning.
+
 It is also useful for vibe coding: move fast with an LLM, but keep the
 engineering memory that lets you review, test, explain, and safely change the
 result later.
@@ -54,6 +59,12 @@ engineering pass, V-process recommendations, and human review report.
 See [docs/10_ai_agent_build_spec.md](docs/10_ai_agent_build_spec.md) for prompt
 examples.
 
+For a ready-to-copy per-project starter workspace, see
+[templates/empty_environment](templates/empty_environment). It gives an AI
+agent a local graph DB, project profile, schema, bootstrap scripts, and first
+request template without mixing private project state into this public
+reference repository.
+
 ## Core Thesis
 
 The LLM is not the source of truth.
@@ -80,6 +91,18 @@ Humans and formal tools keep final authority.
   risks, standards references, and unresolved issues.
 - A low-cost architecture for review preparation, trace candidate generation,
   activity recommendation, and decision explainability.
+- A copyable build specification for AI coding agents that need durable
+  engineering memory across sessions.
+
+## Who This Is For
+
+- Engineers using AI coding agents for real projects, not only demos.
+- Vibe coders who need to recover the reason behind generated code.
+- Reviewers of AI-generated pull requests.
+- Teams preparing requirements, tests, trace candidates, and evidence before
+  formal ALM entry.
+- Builders of local-first agent memory, MCP, context engineering, requirements
+  as code, and traceability tooling.
 
 ## For Vibe Coders
 
@@ -218,6 +241,9 @@ templates/empty_environment/
 
 If this resonates, see [docs/07_promotion_kit.md](docs/07_promotion_kit.md)
 for short posts, longer announcements, and audience notes.
+
+For launch order, target audiences, and traffic metrics, see
+[docs/11_distribution_plan.md](docs/11_distribution_plan.md).
 
 For nearby projects and positioning, see
 [docs/08_related_work_and_positioning.md](docs/08_related_work_and_positioning.md).
