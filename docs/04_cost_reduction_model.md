@@ -15,7 +15,8 @@ handled as structured reasoning before formal record management.
 - Change impact pre-analysis.
 - Open issue classification.
 - Decision rationale drafting.
-- Export preparation for ALM entry.
+- Trace review preparation.
+- One-way handoff package generation for ALM entry.
 
 ## Poor Targets for Initial Replacement
 
@@ -30,7 +31,8 @@ handled as structured reasoning before formal record management.
 ## Decision Rule
 
 Use low-cost AI + graph where the output is a candidate, draft, checklist, or
-analysis.
+analysis. Accepted local review records can also be exported as a handoff
+package when they carry reviewer, timestamp, and rationale.
 
 Use formal ALM where the output becomes the official record.
 
@@ -43,10 +45,14 @@ Inputs:
   Same requirements, same standards summaries, same project profile.
 
 Outputs:
-  Activity recommendations, trace candidates, review questions, open issues.
+  Activity recommendations, trace candidates, trace reviews, decision records,
+  review questions, open issues, and one-way handoff packages.
 
 Metrics:
   Correctness, missing items, false positives, explanation quality,
   review time, setup time, and total cost.
 ```
 
+The repository's sample regression check is not a cost benchmark. It only
+guards deterministic behavior for the fictional sample: expected activities,
+impact paths, decision review state, trace handoff state, and export boundary.

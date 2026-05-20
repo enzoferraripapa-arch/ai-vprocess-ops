@@ -30,6 +30,8 @@ Use the graph as lightweight engineering memory.
 
 ```text
 Requirement -> Decision -> Implementation -> Test -> Evidence
+Requirement -> TraceCandidate -> TraceReview
+Decision -> ALMHandoffPackage
           \-> OpenIssue
           \-> ExternalReference
 ```
@@ -44,7 +46,9 @@ state that should survive beyond one chat window.
 3. Link changed files or modules as implementation references.
 4. Link tests or manual checks as `Evidence`.
 5. Store unresolved assumptions as `OpenIssue`.
-6. Ask the LLM for the next action using only the relevant graph slice.
+6. Record accepted or rejected human decisions with rationale and timestamp.
+7. Record trace review state before treating a candidate link as handoff-ready.
+8. Ask the LLM for the next action using only the relevant graph slice.
 
 ## Useful Edge Types
 
@@ -53,6 +57,7 @@ implements
 verified_by
 depends_on
 blocked_by
+included_in_alm_handoff
 supersedes
 conflicts_with
 explained_by
@@ -66,8 +71,11 @@ The goal is to keep just enough structure so that fast AI-assisted work does
 not become unreviewable code. A small graph can preserve the important context
 without forcing a full enterprise ALM workflow at the start.
 
+For higher-risk work, the same structure can produce a one-way handoff package
+from accepted local review records. That package is still pre-formal: it helps a
+human enter or import records into an ALM system, but it is not an ALM approval.
+
 ## Rule of Thumb
 
 If a future engineer would ask "why is this here?", store the answer as a node
 or edge while the context is still fresh.
-

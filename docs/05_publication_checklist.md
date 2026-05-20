@@ -15,9 +15,12 @@ Use this checklist before copying the package to a public GitHub repository.
 
 - [ ] README explains that this is not model training.
 - [ ] README explains that this is not an ALM replacement.
+- [ ] Early docs explain that local accepted decisions and trace reviews are
+  not formal approvals.
 - [ ] Examples are fictional.
 - [ ] Prototype runs without paid services.
 - [ ] Generated demo DB files are ignored.
+- [ ] Handoff exports are one-way and do not call vendor ALM APIs.
 - [ ] If claiming platform coverage beyond GitHub-hosted Ubuntu CI, record the
   manual Windows or Dell Ubuntu validation command set used for the release.
   See [14_validation_log.md](14_validation_log.md) for the current format.

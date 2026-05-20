@@ -15,9 +15,14 @@ Activity
 Decision
 ReviewQuestion
 TraceCandidate
+TraceReview
 Evidence
 OpenIssue
 ```
+
+In the current SQLite schema, `TraceReview` is represented by the
+`trace_reviews` table rather than a `nodes` row. It records local review state
+for an existing edge.
 
 Teams can add domain-specific nodes such as Hazard, SafetyGoal, FSR, TSR,
 SoftwareRequirement, TestCase, TestResult, WorkItem, Baseline, or Release.
@@ -34,15 +39,20 @@ blocked_by
 explained_by
 references_standard
 uses_sop
-exported_to_alm
 included_in_alm_handoff
 supersedes
 conflicts_with
 ```
 
+## Formal Export Edge Boundary
+
 `exported_to_alm` is not used by the public prototype. It should only be used
 by a project-specific formal adapter after an external ALM write has actually
 been confirmed. The public prototype uses pre-formal handoff records instead.
+
+Use `included_in_alm_handoff` for pre-formal packages when a project represents
+that relation as a graph edge. The reference prototype keeps the handoff
+membership in the export package rather than mutating graph authority.
 
 ## Activity Decision Pattern
 
