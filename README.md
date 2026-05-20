@@ -94,20 +94,28 @@ Humans and formal tools keep final authority.
 - A copyable build specification for AI coding agents that need durable
   engineering memory across sessions.
 
-## Current Prototype Scope
+## What Works Today
 
-The prototype is intentionally small. Today it demonstrates three concrete
-things:
+The current prototype is small, but it is executable end to end:
 
-1. loading fictional project/change data into SQLite graph tables;
-2. matching simple V-process activity policies against a project profile;
-3. querying recursive impact paths with a SQLite CTE;
-4. building an LLM review prompt from the graph, with optional local Ollama
-   execution.
+| Capability | Command |
+| --- | --- |
+| Build a SQLite engineering-memory graph from fictional project/change data | `python prototype/vprocess_graph.py --db .demo/vprocess_demo.db --input examples/sample_project_input.json` |
+| Query recursive impact paths from a change request | `python prototype/impact_query.py --db .demo/vprocess_demo.db --start CR-001 --max-depth 2` |
+| Build bounded LLM review context from the graph | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider prompt` |
+| Call a local Ollama model with the same context | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider ollama --model llama3.1` |
+| Export a deterministic Markdown review report | `python prototype/export_review_report.py --db .demo/vprocess_demo.db --output .demo/review_report.md` |
+| Run the fictional sample benchmark | `python benchmarks/run_sample_benchmark.py` |
 
-It is not yet a production trace engine, MCP server, GraphRAG system, or ALM
-export adapter. The current graph layer is a small SQLite `nodes`/`edges`
-schema with a basic recursive impact query, not a Neo4j-style graph platform.
+The sample benchmark currently passes when the graph selects the expected
+impact analysis, trace review, and regression-selection activities; keeps the
+blocking open issue visible; reaches impacted requirements and standards through
+recursive paths; and preserves the export boundary.
+
+Current limits: this is not a production trace engine, MCP server, GraphRAG
+system, Neo4j-style graph platform, or formal ALM adapter. It is a small
+SQLite-backed reference implementation that proves the operating pattern and
+keeps the extension points explicit.
 
 ## Who This Is For
 
