@@ -94,6 +94,22 @@ Humans and formal tools keep final authority.
 - A copyable build specification for AI coding agents that need durable
   engineering memory across sessions.
 
+## Current Prototype Scope
+
+The prototype is intentionally small. Today it demonstrates three concrete
+things:
+
+1. loading fictional project/change data into SQLite graph tables;
+2. matching simple V-process activity policies against a project profile;
+3. building an LLM review prompt from the graph, with optional local Ollama
+   execution.
+
+It is not yet a production trace engine, recursive impact-analysis engine,
+MCP server, GraphRAG system, or ALM export adapter. Those are project-specific
+extensions that should be built and tested against authorized target artifacts.
+The current graph layer is a small SQLite `nodes`/`edges` schema, not a
+Neo4j-style path-query engine.
+
 ## Who This Is For
 
 - Engineers using AI coding agents for real projects, not only demos.
@@ -269,6 +285,26 @@ The demo creates a local SQLite DB, loads fictional requirements and standards
 references, creates trace candidates, and prints recommended V-process
 activities.
 
+Then build the LLM review prompt from the graph:
+
+```bash
+python prototype/llm_recommend.py \
+  --db .demo/vprocess_demo.db \
+  --provider prompt
+```
+
+If you run a local Ollama server, you can ask a model to review the graph:
+
+```bash
+python prototype/llm_recommend.py \
+  --db .demo/vprocess_demo.db \
+  --provider ollama \
+  --model llama3.1
+```
+
+The LLM output is still only decision support. Requirements, trace links, and
+activity recommendations remain candidates until human review.
+
 ## Quality And Safety Gates
 
 This repository intentionally keeps the first safety layer simple and auditable.
@@ -308,14 +344,17 @@ Current baseline:
 Useful local checks:
 
 ```bash
-python -m compileall -q prototype tools tests
+python -m compileall -q prototype tools tests templates/empty_environment/scripts
 python -m unittest discover -s tests
 python tools/check_public_safety.py
 python -m ruff check .
-python -m bandit -q -r prototype tools
+python -m bandit -q -r prototype tools templates/empty_environment/scripts
 python prototype/vprocess_graph.py \
   --db .demo/vprocess_demo.db \
   --input examples/sample_project_input.json
+python prototype/llm_recommend.py \
+  --db .demo/vprocess_demo.db \
+  --provider prompt
 ```
 
 The goal is not to claim that automation proves engineering quality. The goal

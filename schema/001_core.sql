@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS nodes (
     status TEXT NOT NULL DEFAULT 'candidate',
     owner TEXT,
     confidence REAL,
+    source_path TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -70,6 +71,13 @@ CREATE TABLE IF NOT EXISTS activity_policies (
     FOREIGN KEY (activity_id) REFERENCES nodes(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS run_log (
+    id INTEGER PRIMARY KEY,
+    run_type TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE VIRTUAL TABLE IF NOT EXISTS nodes_fts USING fts5(
     id UNINDEXED,
     node_type UNINDEXED,
@@ -102,4 +110,3 @@ CREATE INDEX IF NOT EXISTS idx_edges_source ON edges(source_id);
 CREATE INDEX IF NOT EXISTS idx_edges_target ON edges(target_id);
 CREATE INDEX IF NOT EXISTS idx_edges_type ON edges(edge_type);
 CREATE INDEX IF NOT EXISTS idx_external_refs_node ON external_refs(node_id);
-

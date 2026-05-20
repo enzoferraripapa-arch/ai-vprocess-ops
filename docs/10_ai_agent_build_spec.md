@@ -34,6 +34,22 @@ A project-specific implementation can include:
 The exact implementation should follow the target project's language, build
 system, repository layout, and authorization boundary.
 
+This repository includes a minimal local demo:
+
+```text
+prototype/vprocess_graph.py
+  Loads fictional project data into SQLite graph tables and prints policy-based
+  V-process activity recommendations.
+
+prototype/llm_recommend.py
+  Reads the SQLite graph, builds bounded LLM context, and can call a local
+  Ollama model for review recommendations.
+```
+
+The demo is deliberately small. It proves the read path from graph DB to LLM
+context, but it is not a production trace engine, recursive impact-analysis
+engine, MCP server, or ALM export adapter.
+
 ## Per-Project Empty Environment
 
 For repeated use, create a separate empty engineering-memory environment beside
@@ -115,6 +131,38 @@ engineering-memory pipeline that:
 Before coding, summarize the target project's artifact types and propose the
 node/edge mapping. After coding, run tests and the public safety gate.
 ```
+
+## Prompt: Review The Demo Graph With A Local LLM
+
+First build the demo graph:
+
+```bash
+python prototype/vprocess_graph.py \
+  --db .demo/vprocess_demo.db \
+  --input examples/sample_project_input.json
+```
+
+Then either inspect the prompt:
+
+```bash
+python prototype/llm_recommend.py \
+  --db .demo/vprocess_demo.db \
+  --provider prompt
+```
+
+Or call a local Ollama model:
+
+```bash
+python prototype/llm_recommend.py \
+  --db .demo/vprocess_demo.db \
+  --provider ollama \
+  --model llama3.1
+```
+
+The expected behavior is not an authoritative approval. The model should return
+a bounded review: recommended activities, supporting evidence, blocking open
+issues, trace links that need human review, and claims that must not be made
+yet.
 
 ## Prompt: Reverse Engineer Requirements From Authorized Code
 

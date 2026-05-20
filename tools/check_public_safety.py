@@ -141,6 +141,7 @@ def check_python_files(files: list[Path]) -> list[Finding]:
 
 def check_sql_schema() -> list[Finding]:
     schema_path = ROOT / "schema" / "001_core.sql"
+    template_schema_path = ROOT / "templates" / "empty_environment" / "schema" / "001_core.sql"
     findings: list[Finding] = []
     try:
         schema = schema_path.read_text(encoding="utf-8")
@@ -157,10 +158,18 @@ def check_sql_schema() -> list[Finding]:
     except sqlite3.Error as exc:
         return [Finding("schema", relative(schema_path), f"schema does not load: {exc}")]
 
-    expected = {"activity_policies", "decisions", "edges", "nodes"}
+    expected = {"activity_policies", "decision_options", "decisions", "edges", "external_refs", "nodes", "run_log"}
     missing = expected - tables
     if missing:
         findings.append(Finding("schema", relative(schema_path), f"missing expected tables: {sorted(missing)}"))
+    if template_schema_path.exists() and template_schema_path.read_text(encoding="utf-8") != schema:
+        findings.append(
+            Finding(
+                "schema-parity",
+                relative(template_schema_path),
+                "template schema must match schema/001_core.sql exactly",
+            )
+        )
     return findings
 
 
@@ -205,7 +214,7 @@ def main() -> int:
         return 1
 
     print("Public safety gate passed.")
-    print("Checked: UTF-8 text, secret patterns, internal markers, JSON, Python compile, SQL schema, workflows.")
+    print("Checked: UTF-8 text, secret patterns, internal markers, JSON, Python compile, SQL schema/parity, workflows.")
     return 0
 
 
