@@ -1,0 +1,12 @@
+{
+  "project_name": "example-project",
+  "target_project": "C:\\path\\to\\target-project",
+  "graph_db": "runtime\\engineering_memory.db",
+  "authority_model": {
+    "llm": "decision_support_only",
+    "graph_db": "engineering_memory",
+    "formal_alm": "approval_authority",
+    "execution_queue": "optional_task_tracker"
+  }
+}
+

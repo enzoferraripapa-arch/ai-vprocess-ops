@@ -34,6 +34,62 @@ A project-specific implementation can include:
 The exact implementation should follow the target project's language, build
 system, repository layout, and authorization boundary.
 
+## Per-Project Empty Environment
+
+For repeated use, create a separate empty engineering-memory environment beside
+the target project instead of mixing generated state into this repository.
+
+Use [templates/empty_environment](../templates/empty_environment) as the
+starting point. It gives the agent:
+
+- a small `AGENTS.md` for the per-project runtime;
+- a SQLite schema compatible with this repository's graph model;
+- a bootstrap script that creates an empty graph DB;
+- a project profile file for the target project path and authority model;
+- a reusable prompt template for the first agent request;
+- an optional boundary for task queues such as Beads.
+
+Recommended separation:
+
+```text
+This repository
+  Defines the build specification and public operating model.
+
+Per-project empty environment
+  Holds local graph DB, project profile, generated reports, and importer code.
+
+Target project
+  Provides authorized source, tests, documents, logs, and configuration.
+
+Execution queue, if used
+  Tracks ready, blocked, claimed, and completed implementation work.
+```
+
+Do not commit generated databases, private project profiles, customer reports,
+or target-project artifacts back to this public reference repository.
+
+Cross-platform copy command:
+
+```bash
+python templates/empty_environment/scripts/create_instance.py \
+  --destination ../my-project-memory \
+  --target-project ../my-project \
+  --project-name my-project
+```
+
+Windows PowerShell users can also use:
+
+```powershell
+.\templates\empty_environment\scripts\create_instance.ps1 `
+  -Destination "..\my-project-memory" `
+  -TargetProject "..\my-project" `
+  -ProjectName "my-project"
+```
+
+If an execution queue such as Beads is available, connect it after the graph DB
+is initialized. Do not make the queue the source of engineering facts; use it
+only for ready, blocked, claimed, and completed work.
+
 ## Prompt: Build A Local Engineering-Memory Pipeline
 
 ```text
@@ -164,4 +220,3 @@ This specification is for authorized engineering work only.
 Do not use it for unauthorized third-party reverse engineering, DRM bypass,
 credential extraction, secret discovery, malware development, evasion workflows,
 or publication of private operational details.
-

@@ -1,0 +1,12 @@
+runtime/*.db
+runtime/*.sqlite
+runtime/*.sqlite3
+runtime/*.log
+runtime/project_profile.local.json
+.beads/
+.demo/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+

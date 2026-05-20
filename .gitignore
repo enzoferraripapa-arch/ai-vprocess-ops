@@ -9,3 +9,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 htmlcov/
+templates/empty_environment/runtime/project_profile.local.json
+templates/empty_environment/runtime/*.log
+templates/empty_environment/.beads/

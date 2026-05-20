@@ -17,7 +17,8 @@ result later.
 Vibe code fast. Keep the engineering memory.
 ```
 
-AI coding needs engineering memory, not just better autocomplete.
+AI coding needs engineering memory, not just better autocomplete or agent
+memory.
 
 Not another prompt template.
 
@@ -25,6 +26,11 @@ This repository is a graph-backed build specification for AI agents that need to
 create project-specific engineering memory: requirements, decisions, trace
 candidates, evidence, open issues, V-process recommendations, and authorized
 reverse-engineering reports.
+
+Most agent-memory tools help an agent remember conversations, tasks, or codebase
+structure. This project uses a narrower boundary: preserve engineering meaning
+that must survive the chat session, then let humans or formal tools decide what
+becomes authoritative.
 
 Shareable one-liner:
 
@@ -137,6 +143,46 @@ Standards/SOP Knowledge
 6. Preserve engineering context during AI-assisted or vibe-coded development.
 7. Recover requirement and trace candidates from authorized legacy artifacts.
 
+## Use The Right Weight
+
+This pattern is useful for many AI-assisted projects, not because every project
+is regulated or safety-critical, but because AI work often loses the context
+that engineers need later:
+
+```text
+Why was this built?
+Which assumptions were used?
+What is still unresolved?
+Which decision changed the direction?
+Which test, source, or evidence supports the result?
+What should the next session read first?
+```
+
+Scale the workflow to the risk and expected lifetime of the work:
+
+| Project shape | Recommended use |
+| --- | --- |
+| Small one-off task | Keep a short agent instruction file, project profile, and open issues. |
+| Normal app or tool | Add artifact inventory, decisions, tests, evidence, and trace candidates. |
+| Long-lived project | Add importers, review reports, and optional execution-task tracking. |
+| Regulated, SOP, ALM, or safety-related work | Use the full graph and keep formal approval outside this environment. |
+
+The default boundary is:
+
+```text
+Execution queue carries the work.
+The graph DB preserves why the work exists.
+Formal ALM or SOP systems keep final authority.
+```
+
+Task queues such as Beads are useful, but optional. They track execution state:
+ready, blocked, claimed, and completed. The graph DB is different: it records
+requirements, decisions, evidence, uncertainty, and rationale so the next
+engineer or AI session can understand why the work exists.
+
+For a copyable starter workspace, see
+[templates/empty_environment](templates/empty_environment).
+
 ## Repository Layout
 
 ```text
@@ -163,6 +209,9 @@ tools/
 
 benchmarks/
   Templates for measuring output quality and cost reduction.
+
+templates/empty_environment/
+  Copyable per-project workspace for local engineering-memory runs.
 ```
 
 ## Share This
