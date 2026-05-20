@@ -53,6 +53,10 @@ prototype/import_reverse_engineering.py
   Imports the fictional authorized reverse-engineering sample into graph nodes
   and candidate trace edges.
 
+prototype/decision_lifecycle.py
+  Records local human decision state. Final accepted or rejected decisions carry
+  reviewer, rationale, and timestamp.
+
 prototype/export_review_report.py
   Exports a deterministic Markdown review report from the same graph context.
 
@@ -68,9 +72,9 @@ benchmarks/run_sample_regression.py
 ```
 
 The demo is deliberately small. It proves the read path from graph DB to LLM
-context, recursive SQLite impact query, Markdown report export, and read-only
-tool boundary, but it is not a production trace engine, complete MCP server, or
-formal ALM adapter.
+context, recursive SQLite impact query, local human decision recording,
+Markdown report export, and read-only tool boundary, but it is not a production
+trace engine, complete MCP server, or formal ALM adapter.
 
 ## Per-Project Empty Environment
 
@@ -185,6 +189,22 @@ The expected behavior is not an authoritative approval. The model should return
 a bounded review: recommended activities, supporting evidence, blocking open
 issues, trace links that need human review, and claims that must not be made
 yet.
+
+## Prompt: Record A Human Decision
+
+```bash
+python prototype/decision_lifecycle.py \
+  --db .demo/vprocess_demo.db \
+  decide \
+  --id DEC-001 \
+  --status accepted \
+  --selected-option bounded_delta_v_process \
+  --decided-by reviewer \
+  --rationale "Impact review accepted the bounded delta path."
+```
+
+This records local engineering review state in the graph. It is still not a
+formal ALM approval, baseline, signature, or audit closure.
 
 ## Prompt: Import Reverse-Engineering Candidates
 

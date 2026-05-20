@@ -18,6 +18,8 @@ Use this checklist before copying the package to a public GitHub repository.
 - [ ] Examples are fictional.
 - [ ] Prototype runs without paid services.
 - [ ] Generated demo DB files are ignored.
+- [ ] If claiming platform coverage beyond GitHub-hosted Ubuntu CI, record the
+  manual Windows or Dell Ubuntu validation command set used for the release.
 - [ ] License is selected before public release.
 - [ ] Contribution rules are defined if external patches are expected.
 

@@ -29,6 +29,10 @@ def load_module(path: Path, module_name: str):
 vprocess_graph = load_module(ROOT / "prototype" / "vprocess_graph.py", "regression_vprocess_graph")
 llm_recommend = load_module(ROOT / "prototype" / "llm_recommend.py", "regression_llm_recommend")
 impact_query = load_module(ROOT / "prototype" / "impact_query.py", "regression_impact_query")
+decision_lifecycle = load_module(
+    ROOT / "prototype" / "decision_lifecycle.py",
+    "regression_decision_lifecycle",
+)
 export_review_report = load_module(
     ROOT / "prototype" / "export_review_report.py",
     "regression_export_review_report",
@@ -50,6 +54,11 @@ def build_graph(db_path: Path) -> sqlite3.Connection:
 def evaluate_context(context: dict) -> dict:
     actual_activities = {policy["activity_id"] for policy in context["matched_activity_policies"]}
     actual_open_issues = {issue["id"] for issue in context["open_issues"]}
+    reviewed_decisions = {
+        decision["id"]
+        for decision in context["decisions"]
+        if decision["status"] == "accepted" and decision.get("decided_by") and decision.get("decided_at")
+    }
     return {
         "expected_activities": sorted(EXPECTED_ACTIVITIES),
         "actual_activities": sorted(actual_activities),
@@ -59,6 +68,7 @@ def evaluate_context(context: dict) -> dict:
         "actual_open_issues": sorted(actual_open_issues),
         "missing_open_issues": sorted(REQUIRED_OPEN_ISSUES - actual_open_issues),
         "trace_edge_count": len(context["trace_edges"]),
+        "reviewed_decisions": sorted(reviewed_decisions),
     }
 
 
@@ -67,7 +77,8 @@ def render_result(metrics: dict, report: str, impact_paths: list[dict]) -> str:
     boundary_present = "Do not claim automatic compliance" in report and "Do not export candidate trace links" in report
     impacted_nodes = {row["node_id"] for row in impact_paths}
     impact_path_present = {"REQ-001", "REQ-002", "STD-SW-TRACE-01"}.issubset(impacted_nodes)
-    passed = passed and boundary_present and impact_path_present
+    decision_review_present = "DEC-001" in metrics["reviewed_decisions"]
+    passed = passed and boundary_present and impact_path_present and decision_review_present
     lines = [
         "# Sample Regression Check Result",
         "",
@@ -85,6 +96,7 @@ def render_result(metrics: dict, report: str, impact_paths: list[dict]) -> str:
         f"| Missing open issues | `{', '.join(metrics['missing_open_issues']) or 'none'}` |",
         f"| Trace edges in report context | `{metrics['trace_edge_count']}` |",
         f"| Recursive impact path reaches requirements/standards | `{'yes' if impact_path_present else 'no'}` |",
+        f"| Human decision review recorded | `{'yes' if decision_review_present else 'no'}` |",
         f"| Export boundary present | `{'yes' if boundary_present else 'no'}` |",
         "",
         "Interpretation: this regression check only verifies the deterministic sample output. It does not prove compliance,",
@@ -99,6 +111,16 @@ def run_regression_check() -> str:
         db_path = Path(temp_dir) / "regression.db"
         conn = build_graph(db_path)
         try:
+            with conn:
+                decision_lifecycle.update_decision(
+                    conn,
+                    decision_id="DEC-001",
+                    status="accepted",
+                    selected_option="bounded_delta_v_process",
+                    decided_by="sample-regression",
+                    rationale="Sample regression records local review state without claiming formal approval.",
+                    decided_at="2026-01-02T03:04:05Z",
+                )
             context = llm_recommend.collect_context(conn)
             report = export_review_report.render_report(context)
             metrics = evaluate_context(context)
@@ -116,7 +138,7 @@ def main() -> int:
     result = run_regression_check()
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(result, encoding="utf-8")
+        args.output.write_text(result, encoding="utf-8", newline="\n")
     else:
         print(result)
     return 0

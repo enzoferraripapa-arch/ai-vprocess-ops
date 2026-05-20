@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "schema" / "001_core.sql"
 DEFAULT_TRACE = ROOT / "examples" / "sample_trace_graph.json"
 DEFAULT_DECISIONS = ROOT / "examples" / "sample_v_process_decisions.json"
+FINAL_DECISION_STATUSES = {"accepted", "rejected"}
 
 
 def connect(db_path: Path) -> sqlite3.Connection:
@@ -134,24 +135,71 @@ def load_trace_fixture(conn: sqlite3.Connection, trace_path: Path = DEFAULT_TRAC
 def load_decisions(conn: sqlite3.Connection, decisions_path: Path = DEFAULT_DECISIONS) -> None:
     decisions = json.loads(decisions_path.read_text(encoding="utf-8"))
     for decision in decisions:
+        status = decision.get("status", "draft")
+        decided_by = decision.get("decided_by")
+        decided_at = decision.get("decided_at")
+        if status in FINAL_DECISION_STATUSES and (not decided_by or not decided_at):
+            raise ValueError(f"final decision {decision['id']} requires decided_by and decided_at")
+        current = conn.execute(
+            "SELECT status FROM decisions WHERE id = ?",
+            (decision["id"],),
+        ).fetchone()
+        preserve_final = current is not None and current["status"] in FINAL_DECISION_STATUSES
         conn.execute(
             """
-            INSERT INTO decisions(id, question, selected_option, rationale, status)
-            VALUES(?, ?, ?, ?, ?)
+            INSERT INTO decisions(id, question, selected_option, rationale, status, decided_by, decided_at)
+            VALUES(?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 question=excluded.question,
-                selected_option=excluded.selected_option,
-                rationale=excluded.rationale,
-                status=excluded.status
+                selected_option=CASE
+                    WHEN decisions.status IN ('accepted', 'rejected') THEN decisions.selected_option
+                    ELSE excluded.selected_option
+                END,
+                rationale=CASE
+                    WHEN decisions.status IN ('accepted', 'rejected') THEN decisions.rationale
+                    ELSE excluded.rationale
+                END,
+                status=CASE
+                    WHEN decisions.status IN ('accepted', 'rejected') THEN decisions.status
+                    ELSE excluded.status
+                END,
+                decided_by=CASE
+                    WHEN decisions.status IN ('accepted', 'rejected') THEN decisions.decided_by
+                    ELSE excluded.decided_by
+                END,
+                decided_at=CASE
+                    WHEN decisions.status IN ('accepted', 'rejected') THEN decisions.decided_at
+                    ELSE excluded.decided_at
+                END
             """,
             (
                 decision["id"],
                 decision["question"],
                 decision.get("selected_option"),
                 decision.get("rationale"),
-                decision.get("status", "draft"),
+                status,
+                decided_by,
+                decided_at,
             ),
         )
+        if not preserve_final:
+            conn.execute("DELETE FROM decision_options WHERE decision_id = ?", (decision["id"],))
+            conn.executemany(
+                """
+                INSERT INTO decision_options(decision_id, option_key, description, pros, cons)
+                VALUES(?, ?, ?, ?, ?)
+                """,
+                [
+                    (
+                        decision["id"],
+                        option["option_key"],
+                        option["description"],
+                        option.get("pros"),
+                        option.get("cons"),
+                    )
+                    for option in decision.get("options", [])
+                ],
+            )
 
 
 def upsert_activity_policy(

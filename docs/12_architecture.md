@@ -12,6 +12,7 @@ flowchart LR
     graph["SQLite engineering-memory graph<br/>nodes, edges, decisions, policies"]
     policy["Policy matcher<br/>single and AND conditions"]
     impact["Recursive impact query<br/>SQLite CTE paths"]
+    decision["Decision lifecycle CLI<br/>accept, reject, mark review-needed"]
     prompt["LLM review context<br/>bounded prompt or local Ollama"]
     report["Markdown review report<br/>deterministic export"]
     tools["Read-only JSON-RPC tool stub<br/>graph context, impact paths, report text"]
@@ -23,11 +24,14 @@ flowchart LR
     target --> reimport --> graph
     graph --> policy
     graph --> impact
+    graph --> decision
     graph --> prompt
     graph --> report
     graph --> tools
     policy --> human
     impact --> human
+    decision --> human
+    human --> decision
     prompt --> human
     report --> human
     tools --> human
@@ -43,7 +47,7 @@ flowchart LR
 | Target project | Authorized source artifacts, tests, logs, documents, configuration | AI-generated engineering conclusions |
 | Importer/scanner | Project-specific extraction and mapping into graph records | Formal approval or compliance claims |
 | SQLite graph | Requirements, decisions, evidence, trace candidates, open issues, policy inputs | Final ALM workflow state |
-| Policy and impact queries | Candidate recommendations and candidate impact paths | Human engineering judgement |
+| Policy, impact, and decision lifecycle tools | Candidate recommendations, candidate impact paths, and local human review records | Formal approval, signatures, or baselines |
 | LLM prompt/report | Review assistance, questions, summaries, next-action drafts | Authority, signatures, baselines |
 | Formal ALM/SOP system | Approved work items, baselines, workflow state, signatures, audit records | Unreviewed inferred candidates |
 
@@ -66,6 +70,15 @@ python prototype/import_reverse_engineering.py \
 python prototype/llm_recommend.py \
   --db .demo/vprocess_demo.db \
   --provider prompt
+
+python prototype/decision_lifecycle.py \
+  --db .demo/vprocess_demo.db \
+  decide \
+  --id DEC-001 \
+  --status accepted \
+  --selected-option bounded_delta_v_process \
+  --decided-by reviewer \
+  --rationale "Impact review accepted the bounded delta path."
 
 python prototype/export_review_report.py \
   --db .demo/vprocess_demo.db \

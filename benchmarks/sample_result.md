@@ -14,6 +14,7 @@ Result: PASS
 | Missing open issues | `none` |
 | Trace edges in report context | `12` |
 | Recursive impact path reaches requirements/standards | `yes` |
+| Human decision review recorded | `yes` |
 | Export boundary present | `yes` |
 
 Interpretation: this regression check only verifies the deterministic sample output. It does not prove compliance,

@@ -148,7 +148,7 @@ def collect_context(conn: sqlite3.Connection, edge_limit: int = 40) -> dict:
         "decisions": rows_as_dicts(
             conn.execute(
                 """
-                SELECT id, question, selected_option, rationale, status
+                SELECT id, question, selected_option, rationale, status, decided_by, decided_at
                 FROM decisions
                 ORDER BY id
                 """
@@ -162,7 +162,7 @@ def build_prompt(context: dict) -> str:
     context_json = json.dumps(context, indent=2, ensure_ascii=False)
     instructions = """You are reviewing a small engineering-memory graph for AI-assisted V-process work.
 
-Use only the graph context below. Treat requirements, traces, and decisions as candidates unless the graph says otherwise.
+Use only the graph context below. Treat requirements, traces, and decisions as candidates unless the graph says otherwise. A decision is only human-reviewed when decided_by and decided_at are recorded.
 
 Return a concise Markdown review with these sections:
 

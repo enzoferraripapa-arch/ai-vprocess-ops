@@ -4,14 +4,41 @@
     "question": "Should this change run a full V-process or a bounded delta V-process?",
     "selected_option": "bounded_delta_v_process",
     "rationale": "The change affects existing behavior but does not introduce a new subsystem. Impact analysis and regression selection are mandatory.",
-    "status": "draft"
+    "status": "draft",
+    "options": [
+      {
+        "option_key": "full_v_process",
+        "description": "Run the full V-process from requirements through verification.",
+        "pros": "Maximizes review coverage for broad architectural change.",
+        "cons": "Adds unnecessary effort when the change is bounded and traceable."
+      },
+      {
+        "option_key": "bounded_delta_v_process",
+        "description": "Run impact analysis, trace review, regression selection, and approval gate for the affected delta.",
+        "pros": "Focuses review effort on affected requirements, tests, and evidence.",
+        "cons": "Requires disciplined impact analysis to avoid missed affected items."
+      }
+    ]
   },
   {
     "id": "DEC-002",
     "question": "Should trace links be exported to the formal ALM immediately?",
     "selected_option": "export_after_review",
     "rationale": "Trace links are candidates until the engineering review confirms affected requirements and test coverage.",
-    "status": "draft"
+    "status": "draft",
+    "options": [
+      {
+        "option_key": "export_immediately",
+        "description": "Export candidate trace links before engineering review.",
+        "pros": "Makes candidates visible in the formal tool quickly.",
+        "cons": "Can make unreviewed trace links look authoritative."
+      },
+      {
+        "option_key": "export_after_review",
+        "description": "Export only after human review confirms the trace candidates.",
+        "pros": "Preserves the boundary between candidate context and formal ALM state.",
+        "cons": "Adds a review step before formal tool synchronization."
+      }
+    ]
   }
 ]
-

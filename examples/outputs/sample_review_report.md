@@ -64,8 +64,10 @@ This report is generated from the local engineering-memory graph. It is decision
 
 - `DEC-001` Should this change run a full V-process or a bounded delta V-process?
   - Current option: `bounded_delta_v_process`
-  - Status: `draft`
-  - Rationale: The change affects existing behavior but does not introduce a new subsystem. Impact analysis and regression selection are mandatory.
+  - Status: `accepted`
+  - Rationale: Sample review accepted the bounded delta V-process path.
+  - Decided by: `sample-reviewer`
+  - Decided at: `2026-01-02T03:04:05Z`
 - `DEC-002` Should trace links be exported to the formal ALM immediately?
   - Current option: `export_after_review`
   - Status: `draft`

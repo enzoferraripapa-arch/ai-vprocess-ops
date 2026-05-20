@@ -78,6 +78,9 @@ def render_report(context: dict) -> str:
                 f"  - Rationale: {decision.get('rationale') or 'No rationale recorded.'}",
             ]
         )
+        if decision.get("decided_by") or decision.get("decided_at"):
+            lines.append(f"  - Decided by: `{decision.get('decided_by') or 'unset'}`")
+            lines.append(f"  - Decided at: `{decision.get('decided_at') or 'unset'}`")
     if not context["decisions"]:
         lines.append("- No decision records found.")
 
@@ -109,7 +112,7 @@ def main() -> int:
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(report + "\n", encoding="utf-8")
+        args.output.write_text(report.rstrip() + "\n", encoding="utf-8", newline="\n")
     else:
         print(report)
     return 0

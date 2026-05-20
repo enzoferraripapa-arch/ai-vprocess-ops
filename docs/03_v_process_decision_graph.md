@@ -63,3 +63,17 @@ ChangeRequest: CR-001
 
 This is not just a checklist. It is a traceable decision structure.
 
+## Decision Lifecycle Boundary
+
+The graph may record local review state for a decision. The flow below is the
+conceptual lifecycle; the current CLI records the requested state and does not
+enforce transition order.
+
+```text
+draft -> needs_review -> accepted
+draft -> needs_review -> rejected
+```
+
+An accepted graph decision means a named human reviewer recorded a rationale and
+timestamp in the local engineering-memory DB. It does not mean formal ALM
+approval, signature completion, baseline creation, or compliance closure.

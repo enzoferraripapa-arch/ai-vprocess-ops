@@ -96,6 +96,7 @@ The current prototype is small, but it is executable end to end:
 | Query recursive impact paths from a change request | `python prototype/impact_query.py --db .demo/vprocess_demo.db --start CR-001 --max-depth 2` |
 | Build bounded LLM review context from the graph | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider prompt` |
 | Call a local Ollama model with the same context | `python prototype/llm_recommend.py --db .demo/vprocess_demo.db --provider ollama --model llama3.1` |
+| Record human decision lifecycle state | `python prototype/decision_lifecycle.py --db .demo/vprocess_demo.db decide --id DEC-001 --status accepted --selected-option bounded_delta_v_process --decided-by reviewer --rationale "Impact review accepted the bounded delta path."` |
 | Export a deterministic Markdown review report | `python prototype/export_review_report.py --db .demo/vprocess_demo.db --output .demo/review_report.md` |
 | Expose read-only JSON-RPC-style graph tools | `python prototype/mcp_readonly_stub.py --db .demo/vprocess_demo.db --list-tools` |
 | Run the fictional sample regression check | `python benchmarks/run_sample_regression.py` |
@@ -103,8 +104,8 @@ The current prototype is small, but it is executable end to end:
 The sample regression check currently passes when the graph selects the expected
 impact analysis, trace review, regression-selection, and approval-gate
 activities; keeps the blocking open issue visible; reaches impacted
-requirements and standards through recursive paths; and preserves the export
-boundary.
+requirements and standards through recursive paths; records human decision
+review state; and preserves the export boundary.
 
 Committed sample outputs:
 
@@ -117,7 +118,8 @@ GraphRAG system, Neo4j-style graph platform, or formal ALM adapter. It is a
 small SQLite-backed reference implementation that proves the operating pattern
 and keeps the extension points explicit. Reverse-engineered requirements and
 traces remain candidates; this prototype imports them for review, but does not
-promote them to formal requirements.
+promote them to formal requirements. Accepted decisions in the local graph are
+human review records, not formal ALM approvals or signatures.
 
 ## Who This Is For
 
@@ -315,6 +317,19 @@ python prototype/impact_query.py \
   --max-depth 2
 ```
 
+Record a human review decision:
+
+```bash
+python prototype/decision_lifecycle.py \
+  --db .demo/vprocess_demo.db \
+  decide \
+  --id DEC-001 \
+  --status accepted \
+  --selected-option bounded_delta_v_process \
+  --decided-by reviewer \
+  --rationale "Impact review accepted the bounded delta path."
+```
+
 Import the authorized reverse-engineering sample:
 
 ```bash
@@ -382,6 +397,9 @@ GitHub Actions also runs:
 
 Current baseline:
 
+- GitHub Actions currently runs on `ubuntu-latest`. Windows and Dell Ubuntu
+  checks are local/manual release gates unless a repository owner adds hosted or
+  self-hosted runners for them.
 - `CI` verifies that the Python prototype compiles, the unit tests pass, the
   public safety gate passes, the demo can build/query the sample graph, and the
   committed sample outputs match regenerated outputs.
@@ -419,6 +437,17 @@ python prototype/impact_query.py \
 python prototype/llm_recommend.py \
   --db .demo/vprocess_demo.db \
   --provider prompt
+python prototype/decision_lifecycle.py \
+  --db .demo/vprocess_demo.db \
+  list
+python prototype/decision_lifecycle.py \
+  --db .demo/vprocess_demo.db \
+  decide \
+  --id DEC-001 \
+  --status accepted \
+  --selected-option bounded_delta_v_process \
+  --decided-by local-reviewer \
+  --rationale "Local review accepted the bounded delta path."
 python prototype/export_review_report.py \
   --db .demo/vprocess_demo.db \
   --output .demo/review_report.md

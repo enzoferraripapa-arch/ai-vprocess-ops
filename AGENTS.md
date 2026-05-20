@@ -29,7 +29,8 @@ Before changing or extending the project, read these files in order:
 5. `examples/sample_project_input.json`
 6. `examples/sample_trace_graph.json`
 7. `prototype/vprocess_graph.py`
-8. `docs/12_architecture.md`
+8. `prototype/decision_lifecycle.py`
+9. `docs/12_architecture.md`
 
 Use `docs/10_ai_agent_build_spec.md` when a user wants an AI coding agent to
 build a project-specific scanner, graph importer, reverse-engineering pipeline,
@@ -55,6 +56,8 @@ When asked to use or extend this repository, preserve this operating model:
 - Treat trace links as candidates until reviewed.
 - Treat reverse-engineered requirements as candidates until reviewed and
   formally promoted.
+- Record accepted or rejected decisions with reviewer, rationale, and timestamp;
+  do not treat those records as formal ALM approval.
 - Treat V-process activity recommendations as decision support, not approval.
 - Keep formal ALM systems authoritative for baselines, workflow state,
   signatures, approvals, and audit records.
@@ -127,6 +130,17 @@ python prototype/impact_query.py \
 python prototype/llm_recommend.py \
   --db .demo/vprocess_demo.db \
   --provider prompt
+python prototype/decision_lifecycle.py \
+  --db .demo/vprocess_demo.db \
+  list
+python prototype/decision_lifecycle.py \
+  --db .demo/vprocess_demo.db \
+  decide \
+  --id DEC-001 \
+  --status accepted \
+  --selected-option bounded_delta_v_process \
+  --decided-by local-reviewer \
+  --rationale "Local review accepted the bounded delta path."
 python prototype/export_review_report.py \
   --db .demo/vprocess_demo.db \
   --output .demo/review_report.md

@@ -71,6 +71,26 @@ def main() -> int:
         )
         run_command(
             [
+                "prototype/decision_lifecycle.py",
+                "--db",
+                str(db_path),
+                "decide",
+                "--id",
+                "DEC-001",
+                "--status",
+                "accepted",
+                "--selected-option",
+                "bounded_delta_v_process",
+                "--decided-by",
+                "sample-reviewer",
+                "--rationale",
+                "Sample review accepted the bounded delta V-process path.",
+                "--decided-at",
+                "2026-01-02T03:04:05Z",
+            ]
+        )
+        run_command(
+            [
                 "prototype/export_review_report.py",
                 "--db",
                 str(db_path),
