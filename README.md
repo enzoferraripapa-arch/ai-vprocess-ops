@@ -121,6 +121,17 @@ Committed sample outputs are regenerated and checked by CI:
 - [examples/outputs/sample_alm_handoff.md](examples/outputs/sample_alm_handoff.md)
 - [benchmarks/sample_result.md](benchmarks/sample_result.md)
 
+## Applied Companion
+
+For a vendor-neutral applied example playbook, see
+[ai-vprocess-playbook](https://github.com/enzoferraripapa-arch/ai-vprocess-playbook).
+
+Use this repository for the abstract pattern and executable prototype. Use the
+playbook for small operational examples such as project profiles,
+work-item-like SOP skeletons, gate and trace reviews, connector permission
+boundaries, and routing matrices. The playbook is still an example set, not an
+approval, compliance, or certification package.
+
 ## For AI Agents
 
 Use this repository as a build specification, not as a place to store private

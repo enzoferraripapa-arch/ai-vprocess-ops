@@ -42,6 +42,11 @@ Use `docs/17_relationship_to_generic_engineering_memory_db.md` when explaining
 how this repository relates to a generic project-memory DB or a formal ALM /
 QMS system.
 
+Use the companion repository
+`https://github.com/enzoferraripapa-arch/ai-vprocess-playbook` when a user asks
+for vendor-neutral applied examples of the pattern. Keep this repository focused
+on the abstract method and executable prototype.
+
 Use `docs/10_ai_agent_build_spec.md` when a user wants an AI coding agent to
 build a project-specific scanner, graph importer, reverse-engineering pipeline,
 ALM export adapter, or human review report from this specification.
