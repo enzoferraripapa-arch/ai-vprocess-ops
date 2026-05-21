@@ -23,15 +23,24 @@ references, and standards references are stored outside the model.
 Before changing or extending the project, read these files in order:
 
 1. `README.md`
-2. `docs/02_learning_vs_external_memory.md`
-3. `docs/03_v_process_decision_graph.md`
-4. `schema/001_core.sql`
-5. `examples/sample_project_input.json`
-6. `examples/sample_trace_graph.json`
-7. `prototype/vprocess_graph.py`
-8. `prototype/decision_lifecycle.py`
-9. `prototype/alm_handoff_export.py`
-10. `docs/12_architecture.md`
+2. `docs/15_no_x_rule_pattern.md`
+3. `docs/02_learning_vs_external_memory.md`
+4. `docs/03_v_process_decision_graph.md`
+5. `schema/001_core.sql`
+6. `examples/sample_project_input.json`
+7. `examples/sample_trace_graph.json`
+8. `prototype/vprocess_graph.py`
+9. `prototype/decision_lifecycle.py`
+10. `prototype/alm_handoff_export.py`
+11. `docs/12_architecture.md`
+
+Use `docs/16_application_examples_and_responsibility.md` when applying the
+repository to real product, safety, regulatory, cybersecurity, or commercial
+examples.
+
+Use `docs/17_relationship_to_generic_engineering_memory_db.md` when explaining
+how this repository relates to a generic project-memory DB or a formal ALM /
+QMS system.
 
 Use `docs/10_ai_agent_build_spec.md` when a user wants an AI coding agent to
 build a project-specific scanner, graph importer, reverse-engineering pipeline,
@@ -57,6 +66,8 @@ When asked to use or extend this repository, preserve this operating model:
 - Treat trace links as candidates until reviewed.
 - Treat reverse-engineered requirements as candidates until reviewed and
   formally promoted.
+- Attach the relevant No-X boundary when candidate output could be mistaken for
+  a controlled record, approval, gate pass, imported handoff, or accepted trace.
 - Record accepted or rejected decisions with reviewer, rationale, and timestamp;
   do not treat those records as formal ALM approval.
 - Export ALM handoff packages only from accepted local review records; do not
@@ -64,6 +75,13 @@ When asked to use or extend this repository, preserve this operating model:
 - Treat V-process activity recommendations as decision support, not approval.
 - Keep formal ALM systems authoritative for baselines, workflow state,
   signatures, approvals, and audit records.
+- Treat application examples as examples only. The user of a derived workflow
+  remains responsible for product, safety, legal, regulatory, cybersecurity,
+  privacy, release, support, and operational decisions.
+- If a generic engineering-memory DB is used, treat it as the per-project
+  memory layer. Treat this repository as the V-process / pre-ALM method layer,
+  not as a bundled second DB, a replacement for that DB, or a replacement for
+  formal ALM/QMS authority.
 
 ## Expected Agent Output
 

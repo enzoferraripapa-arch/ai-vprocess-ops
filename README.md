@@ -1,15 +1,21 @@
-# AI-Native V-Process Operations
+# Reviewable AI-Assisted Engineering
+
+## ai-vprocess-ops: a small SQLite graph that captures why AI-generated code exists
 
 [![CI](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/ci.yml/badge.svg)](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/ci.yml)
 [![Security](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/security.yml/badge.svg)](https://github.com/enzoferraripapa-arch/ai-vprocess-ops/actions/workflows/security.yml)
 
-AI coding agents can build fast, but the engineering reason behind the work
-often disappears across sessions.
+AI wrote the code. Where's the why? AI coding agents can build fast, but the
+engineering reason behind the work often disappears across sessions.
 
 This repository is a small, executable reference architecture for preserving
 that reason as a local SQLite graph: requirements, decisions, trace candidates,
 tests, evidence, open issues, policy triggers, standards references, and ALM
 handoff rationale.
+
+Existing project notes or memory DBs can feed this method as optional upstream
+sources. The repository itself stays focused on the V-process / pre-ALM method
+layer.
 
 It is designed for Codex, Claude Code, Cursor, GitHub Copilot, or another AI
 coding agent when the bottleneck is no longer code generation speed, but the
@@ -20,6 +26,18 @@ Model weights stay fixed.
 Engineering state lives in the database.
 The LLM reads the graph and drafts bounded recommendations.
 Humans and formal ALM systems keep final authority.
+```
+
+```mermaid
+flowchart LR
+    generic["Your existing project notes or memory DB (optional)<br/>project-local facts and session memory"]
+    local["ai-vprocess-ops local SQLite graph<br/>V-process review method and No-X rules"]
+    handoff["Reviewed handoff package<br/>accepted local decisions and traces only"]
+    alm["Formal ALM / SOP / QMS<br/>official approvals and records"]
+
+    generic -. "optional upstream memory" .-> local
+    local --> handoff
+    handoff --> alm
 ```
 
 ## Boundary
@@ -37,6 +55,7 @@ This is not:
 - model training or fine-tuning;
 - automatic compliance;
 - a replacement for human engineering judgement;
+- a packaged generic project-memory database;
 - a replacement for Polarion, DOORS, Jama, Codebeamer, or another formal ALM
   system;
 - a tool for unauthorized third-party reverse engineering, DRM bypass,
@@ -45,6 +64,11 @@ This is not:
 Local accepted decisions and reviewed traces are local review records only.
 Formal approvals, baselines, signatures, workflow state, and audit records stay
 in the formal ALM or SOP system.
+
+The repository includes application examples, but they are examples only. If
+you use this pattern to develop, review, release, sell, certify, operate, or
+maintain anything, the engineering decisions and consequences remain yours. See
+[docs/16_application_examples_and_responsibility.md](docs/16_application_examples_and_responsibility.md).
 
 ## What Works Today
 
@@ -128,6 +152,11 @@ For a copyable per-project starter workspace, use
 local graph DB schema, project profile, bootstrap scripts, and first-request
 template without mixing private project data into this public repository.
 
+If you already use a generic engineering-memory DB, treat it as an external
+per-project memory layer and this repository as the V-process / pre-ALM method
+layer. This repository does not require both layers for every project. See
+[docs/17_relationship_to_generic_engineering_memory_db.md](docs/17_relationship_to_generic_engineering_memory_db.md).
+
 ## Who This Is For
 
 - Engineers using AI coding agents on long-running projects.
@@ -191,6 +220,9 @@ templates/empty_environment/
 - [docs/12_architecture.md](docs/12_architecture.md): executable path and responsibility split.
 - [docs/13_mcp_integration.md](docs/13_mcp_integration.md): read-only JSON-RPC-style tool boundary.
 - [docs/14_validation_log.md](docs/14_validation_log.md): Windows and Dell Ubuntu validation notes.
+- [docs/15_no_x_rule_pattern.md](docs/15_no_x_rule_pattern.md): negative boundary rules that keep candidates from being mistaken for records, approvals, gate passes, or accepted traceability.
+- [docs/16_application_examples_and_responsibility.md](docs/16_application_examples_and_responsibility.md): example-use cases and the plain-language responsibility boundary.
+- [docs/17_relationship_to_generic_engineering_memory_db.md](docs/17_relationship_to_generic_engineering_memory_db.md): how this V-process method relates to a generic per-project engineering-memory DB.
 
 ## Quality Gates
 
