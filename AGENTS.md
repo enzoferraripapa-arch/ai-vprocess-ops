@@ -42,6 +42,14 @@ Use `docs/17_relationship_to_generic_engineering_memory_db.md` when explaining
 how this repository relates to a generic project-memory DB or a formal ALM /
 QMS system.
 
+Use `docs/18_abstraction_levels_and_architecture_review.md` when AI-generated
+requirements, architecture, design, implementation, or evidence appear to mix
+levels.
+
+Use `docs/19_design_thinking_decomposition_rules.md` when AI-generated design
+content needs framing, option-space, rationale, representation, or uncertainty
+review before handoff.
+
 Use the companion repository
 `https://github.com/enzoferraripapa-arch/ai-vprocess-playbook` when a user asks
 for vendor-neutral applied examples of the pattern. Keep this repository focused

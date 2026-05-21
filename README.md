@@ -234,6 +234,8 @@ templates/empty_environment/
 - [docs/15_no_x_rule_pattern.md](docs/15_no_x_rule_pattern.md): negative boundary rules that keep candidates from being mistaken for records, approvals, gate passes, or accepted traceability.
 - [docs/16_application_examples_and_responsibility.md](docs/16_application_examples_and_responsibility.md): example-use cases and the plain-language responsibility boundary.
 - [docs/17_relationship_to_generic_engineering_memory_db.md](docs/17_relationship_to_generic_engineering_memory_db.md): how this V-process method relates to a generic per-project engineering-memory DB.
+- [docs/18_abstraction_levels_and_architecture_review.md](docs/18_abstraction_levels_and_architecture_review.md): abstraction-level and architecture-review controls for AI-generated artifacts.
+- [docs/19_design_thinking_decomposition_rules.md](docs/19_design_thinking_decomposition_rules.md): design-thinking operations, failure modes, and review prompts for inspectable AI-assisted design.
 
 ## Quality Gates
 
