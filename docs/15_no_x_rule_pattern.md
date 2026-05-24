@@ -38,6 +38,20 @@ authority.
 | `NO-STATE-SKIP` | State can advance because the next state is convenient or implied. | From-state, to-state, actor, rationale, evidence snapshot, review disposition, and unresolved issue check. | Return to the last evidence-backed state and record the missing evidence. |
 | `NO-CEREMONY-AS-ENGINEERING` | Completing a form, checklist, or workflow step means the engineering decision is sound. | Rationale, alternatives, constraints, affected interfaces, risk impact, and owner disposition. | Keep the engineering gate open until evidence is reviewed. |
 
+## Reuse And Delta Rules
+
+Reuse and delta development are high-risk because the project already has
+documents, components, tests, and approvals that look familiar. Familiarity is
+not applicability.
+
+| Rule | Prohibited assumption | Required evidence | Fallback |
+| --- | --- | --- | --- |
+| `NO-LEGACY-AS-CURRENT` | A legacy artifact, existing design, or previous document is current project truth. | Current scope, current baseline, applicability review, changed assumptions, and owner disposition. | Use it only as reference input until accepted for this project. |
+| `NO-PAST-PASS-AS-CURRENT-PASS` | A previous pass, approval, review, or release result still passes the current project. | Current criteria, current evidence snapshot, delta impact review, reviewer, and revalidation result. | Reopen the gate or mark the old result as historical evidence only. |
+| `NO-SMALL-DELTA-AS-LOW-RISK` | A small-looking change is automatically low risk. | Affected interfaces, timing, safety/security impact, regression scope, and hidden dependency check. | Route through delta impact review before lowering review depth. |
+| `NO-REUSE-AS-TRACE-CLOSURE` | Reusing a component, document, template, or test closes traceability. | Current source requirement, target artifact, link rationale, applicability status, and accepted trace review. | Keep trace links as candidates until reviewed. |
+| `NO-EXISTING-TEST-AS-REVALIDATION` | Existing tests prove the reused or changed item is validated now. | Current configuration, test environment, acceptance criteria, regression rationale, and re-run or justified reuse result. | Plan revalidation or record why the existing test is not sufficient. |
+
 ## Empty Sections
 
 An empty evidence section is not a promise that evidence exists elsewhere. It

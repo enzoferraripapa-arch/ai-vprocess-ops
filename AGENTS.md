@@ -79,6 +79,9 @@ When asked to use or extend this repository, preserve this operating model:
 - Treat trace links as candidates until reviewed.
 - Treat reverse-engineered requirements as candidates until reviewed and
   formally promoted.
+- Treat legacy artifacts, previous approvals, existing tests, reused components,
+  and small deltas as current-project candidates until applicability and
+  revalidation are reviewed.
 - Attach the relevant No-X boundary when candidate output could be mistaken for
   a controlled record, approval, gate pass, imported handoff, or accepted trace.
 - Record accepted or rejected decisions with reviewer, rationale, and timestamp;
