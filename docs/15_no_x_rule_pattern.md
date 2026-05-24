@@ -52,6 +52,20 @@ not applicability.
 | `NO-REUSE-AS-TRACE-CLOSURE` | Reusing a component, document, template, or test closes traceability. | Current source requirement, target artifact, link rationale, applicability status, and accepted trace review. | Keep trace links as candidates until reviewed. |
 | `NO-EXISTING-TEST-AS-REVALIDATION` | Existing tests prove the reused or changed item is validated now. | Current configuration, test environment, acceptance criteria, regression rationale, and re-run or justified reuse result. | Plan revalidation or record why the existing test is not sufficient. |
 
+## Feedback And Feasibility Rules
+
+Feedback is useful input, but it is not automatically safe, consistent,
+feasible, or authoritative. The same boundary applies to user requests, review
+comments, management requests, and other AI opinions.
+
+| Rule | Prohibited assumption | Required evidence | Fallback |
+| --- | --- | --- | --- |
+| `NO-FEEDBACK-AS-REQUIREMENT` | A user, reviewer, manager, or AI comment is already an accepted requirement or change. | Source, classification, owner disposition, safety/feasibility review, affected artifacts, and trace target. | Keep it as a feedback candidate until accepted or rejected. |
+| `NO-REQUEST-AS-SAFE-ACTION` | A requested action is safe, permitted, feasible, and in scope because someone asked for it. | Safety/scope/permission check, affected-system review, rollback or hold decision, and rationale. | Pause, reduce scope, or reject the action with evidence. |
+| `NO-AI-AGREEMENT-AS-EVIDENCE` | Another AI or tool agreeing with a proposal proves it is correct. | Primary source evidence, test/review result, expert disposition, or reproducible analysis. | Treat AI agreement as a critique signal only. |
+| `NO-IMPLEMENTATION-AS-VALIDATION` | Implementing a change proves the idea was valid, safe, or complete. | Review result, verification result, trace impact, residual risk, and acceptance criteria. | Keep implemented output as a candidate until validated. |
+| `NO-CONSENSUS-AS-CORRECTNESS` | Multiple people or tools agreeing means the answer is correct. | Independent evidence, contradiction review, and explicit unresolved-risk disposition. | Record consensus as signal, not proof. |
+
 ## Empty Sections
 
 An empty evidence section is not a promise that evidence exists elsewhere. It
@@ -74,6 +88,10 @@ When an AI agent writes or updates project artifacts:
 - attach the relevant No-X rule near the candidate output;
 - do not hide the boundary in a separate policy document only;
 - mark empty record sections as absence markers;
+- classify user, reviewer, manager, and AI feedback before turning it into a
+  requirement, task, implementation, or handoff;
+- state the safety, consistency, feasibility, or evidence blocker when a
+  request cannot be accepted as written;
 - require human review before promotion, import, baseline, approval, or closure;
 - export candidate packages in one direction unless an approved connector
   authority package exists.

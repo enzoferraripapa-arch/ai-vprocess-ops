@@ -82,8 +82,14 @@ When asked to use or extend this repository, preserve this operating model:
 - Treat legacy artifacts, previous approvals, existing tests, reused components,
   and small deltas as current-project candidates until applicability and
   revalidation are reviewed.
+- Treat user requests, reviewer comments, management requests, and other AI
+  opinions as feedback candidates until they are classified, checked for safety
+  and feasibility, and accepted or rejected with rationale.
 - Attach the relevant No-X boundary when candidate output could be mistaken for
   a controlled record, approval, gate pass, imported handoff, or accepted trace.
+- If a requested change is unsafe, inconsistent, infeasible, out of scope, or
+  unsupported by evidence, say so directly and record the blocker instead of
+  implementing a plausible-looking artifact.
 - Record accepted or rejected decisions with reviewer, rationale, and timestamp;
   do not treat those records as formal ALM approval.
 - Export ALM handoff packages only from accepted local review records; do not
