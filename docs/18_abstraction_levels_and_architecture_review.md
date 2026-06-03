@@ -1,5 +1,10 @@
 # Abstraction Levels And Architecture Review
 
+- Document ID: `AIVPROC-ARCH-REVIEW-018`
+- Trace role: architecture/design review pattern for abstraction-level,
+  viewpoint, interface, behavior, evidence, and operation checks.
+- Boundary: `NO-ARCHITECTURE-RATIONALE-AS-PROOF`
+
 AI-assisted engineering becomes hard to review when requirements, architecture,
 design, implementation, and evidence are written at mixed levels.
 

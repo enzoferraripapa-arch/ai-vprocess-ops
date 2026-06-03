@@ -1,5 +1,10 @@
 # Design Thinking Decomposition Rules
 
+- Document ID: `AIVPROC-DESIGN-DECOMP-019`
+- Trace role: design decomposition and reasoning-chain review pattern for frame,
+  option, constraint, F/B/S, representation, rationale, and handoff checks.
+- Boundary: `NO-INTUITION-AS-LOGIC`
+
 AI can produce fluent design text faster than teams can review the reasoning
 behind it. This document turns design thinking into small reviewable operations
 so the reasoning chain can be inspected before a candidate becomes a handoff
